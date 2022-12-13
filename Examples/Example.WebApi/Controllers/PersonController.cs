@@ -22,13 +22,13 @@ namespace Example.WebApi.Controllers
 		}
 
 		[HttpPost]
-		public bool Set(int number = 1, int status = 1)
+		public bool Post(int number = 1, int status = 1)
 		{
 			try
 			{
 				var person = new Person
 				{
-					Name = $"Test user {number}",
+					Name = $"Person {number}",
 					Age = 22,
 					Status = (Status)status
 				};

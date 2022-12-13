@@ -29,6 +29,6 @@ namespace Example.WebApi
 			NpgsqlConnection.GlobalTypeMapper.MapEnum<Status>();
 		}
 
-		public DbSet<Person>? Person { get; set; }
+		public virtual DbSet<Person>? Person { get; set; }
 	}
 }
