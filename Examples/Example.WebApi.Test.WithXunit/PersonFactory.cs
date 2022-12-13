@@ -24,7 +24,7 @@ namespace Example.WebApi.Test.WithXunit
 			return persons;
 		}
 
-		public static Person GetPerson(int withId, Status status = Status.Active)
+		public static Person GetPerson(int withId = 1, Status status = Status.Active)
 		{
 			return GetPersons(1, withId, status).First();
 		}
