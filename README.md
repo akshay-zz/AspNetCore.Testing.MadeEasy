@@ -53,17 +53,19 @@ You can write a **integration test** against a mock context as follows.
 
 - Configure `appsettings.Testing.json`
 ```JSON
-"InternalTestSetting": {
-		"UseExternaldb": false,
-		"ConnectionString": "",
-		"DockerDb": {
-			"Image": "kartoza/postgis",
-			"ContainerName": "example_postgris",
-			"DbName": "example",
-			"UserName": "postgres",
-			"Password": "welcome"
-		}
-	}
+{
+  "InternalTestSetting": {
+    "UseExternaldb": false,
+    "ConnectionString": "",
+    "DockerDb": {
+      "Image": "kartoza/postgis",
+      "ContainerName": "example_postgris",
+      "DbName": "example",
+      "UserName": "postgres",
+      "Password": "welcome"
+    }
+  }
+}
 ```
 
 - Get your container and start it
