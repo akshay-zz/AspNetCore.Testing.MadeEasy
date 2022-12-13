@@ -14,7 +14,7 @@ public class InternalTestSettingManager
     {
         var builder = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile("appsettings.testing.json", optional: false, reloadOnChange: false)
+        .AddJsonFile("appsettings.Testing.json", optional: false, reloadOnChange: false)
         .AddEnvironmentVariables();
 
         var configuration = builder.Build();
