@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 using System.IO;
 
 namespace AspNetCore.Testing.MadeEasy.IntegrationTest;
@@ -19,9 +20,7 @@ public class InternalTestSettingManager
 
         var configuration = builder.Build();
 
-        return configuration.GetSection(nameof(InternalTestSetting)).Get<InternalTestSetting>();
-
-
+        return configuration.GetSection("AspNetCore.Testing.MadeEasy").Get<InternalTestSetting>();
     }
 
     /// <summary>
@@ -57,9 +56,14 @@ public class InternalTestSetting
 /// </summary>
 public class DockerSetting
 {
+    private Dictionary<string, string> enviromentVariables;
+    private Dictionary<string, string> volume;
+
     public string Image { get; set; }
     public string ContainerName { get; set; }
-    public string DbName { get; set; }
-    public string UserName { get; set; }
-    public string Password { get; set; }
+    public Dictionary<string, string> EnviromentVariables
+    {
+        get => enviromentVariables ?? new();
+        set => enviromentVariables = value;
+    }
 }
