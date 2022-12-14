@@ -43,14 +43,14 @@ namespace Example.WebApi.Test.WithXunit
             services.AddEntityFrameworkNpgsql().AddDbContext<DatabaseContext>(
                 opt =>
                 {
-                    opt.UseNpgsql(PostgresDbManager.ConnectionString, o => o.UseNetTopologySuite());
+                    opt.UseNpgsql(DatabaseManager.ConnectionString, o => o.UseNetTopologySuite());
                 });
         }
     }
 
     internal class GlobalSetup : XunitTestFramework, IDisposable
     {
-        private readonly PostgresDbManager _dbContainer = new();
+        private readonly DatabaseManager _dbContainer = new();
 
         public GlobalSetup(IMessageSink messageSink) : base(messageSink)
         {
@@ -91,7 +91,7 @@ namespace Example.WebApi.Test.WithXunit
             services.AddEntityFrameworkNpgsql().AddDbContext<DatabaseContext>(
                 opt =>
                 {
-                    opt.UseNpgsql(PostgresDbManager.ConnectionString, o => o.UseNetTopologySuite());
+                    opt.UseNpgsql(DatabaseManager.ConnectionString, o => o.UseNetTopologySuite());
                 });
         }
 

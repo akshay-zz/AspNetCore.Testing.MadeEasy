@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 
 namespace AspNetCore.Testing.MadeEasy.IntegrationTest.DatabaseManager;
 
-public class PostgresDbManager
+public class DatabaseManager
 {
     private readonly TestcontainersContainer container;
 
-    public PostgresDbManager()
+    public DatabaseManager()
     {
         if (!InternalTestSettingManager.Current.UseExternaldb)
         {
@@ -18,7 +18,7 @@ public class PostgresDbManager
 
     private static TestcontainersContainer GetTestContainer()
     {
-        var compose = new TestcontainersBuilder<TestcontainersContainer>()
+        return new TestcontainersBuilder<TestcontainersContainer>()
         .WithImage(InternalTestSettingManager.Current.DockerDb.Image)
         .WithName(InternalTestSettingManager.Current.DockerDb.ContainerName)
         .WithEnvironment(InternalTestSettingManager.Current.DockerDb.EnviromentVariables)
@@ -26,8 +26,6 @@ public class PostgresDbManager
         .WithPortBinding(5432, 5432)
         .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
         .Build();
-
-        return compose;
     }
 
     public async Task SpinContainer()
@@ -38,7 +36,6 @@ public class PostgresDbManager
     public async Task StopContainer()
     {
         await container?.StopAsync();
-        //await container?.DisposeAsync();
     }
 
     /// <summary>
