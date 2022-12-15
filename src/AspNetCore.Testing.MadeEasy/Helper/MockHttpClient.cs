@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace AspNetCore.Testing.MadeEasy.Helper;
 
+/// <summary>
+/// Helper method for http client
+/// </summary>
 public class MockHttpClient
 {
     /// <summary>

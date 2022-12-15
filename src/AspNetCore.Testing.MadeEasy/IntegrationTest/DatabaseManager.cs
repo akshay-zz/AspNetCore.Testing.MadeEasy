@@ -2,12 +2,18 @@
 using DotNet.Testcontainers.Containers;
 using System.Threading.Tasks;
 
-namespace AspNetCore.Testing.MadeEasy.IntegrationTest.DatabaseManager;
+namespace AspNetCore.Testing.MadeEasy.IntegrationTest;
 
+/// <summary>
+/// Database manager
+/// </summary>
 public class DatabaseManager
 {
     private readonly TestcontainersContainer container;
 
+    /// <summary>
+    /// Initiate <see cref="DatabaseManager"/>
+    /// </summary>
     public DatabaseManager()
     {
         if (!InternalTestSettingManager.Current.UseExternaldb)
@@ -28,11 +34,20 @@ public class DatabaseManager
         .Build();
     }
 
+    /// <summary>
+    /// Start the database container
+    /// </summary>
+    /// <returns></returns>
     public async Task SpinContainer()
     {
         await container?.StartAsync();
     }
 
+
+    /// <summary>
+    /// Stop the database container
+    /// </summary>
+    /// <returns></returns>
     public async Task StopContainer()
     {
         await container?.StopAsync();

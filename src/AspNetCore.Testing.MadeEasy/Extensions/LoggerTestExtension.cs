@@ -4,6 +4,9 @@ using System;
 
 namespace AspNetCore.Testing.MadeEasy.Extensions;
 
+/// <summary>
+/// Extension for Moq logger
+/// </summary>
 public static class LoggerTestExtension
 {
     /// <summary>

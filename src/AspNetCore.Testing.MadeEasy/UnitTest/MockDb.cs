@@ -6,8 +6,17 @@ using System.Threading;
 
 namespace AspNetCore.Testing.MadeEasy.UnitTest;
 
+/// <summary>
+/// Create mock db set
+/// </summary>
 public class MockDb
 {
+    /// <summary>
+    /// Generate <see cref="Mock"/> of <see cref="DbSet{TEntity}"/>
+    /// </summary>
+    /// <typeparam name="TEntity">type of entity</typeparam>
+    /// <param name="entities">data</param>
+    /// <returns></returns>
     public static Mock<DbSet<TEntity>> CreateDbSet<TEntity>(IQueryable<TEntity> entities) where TEntity : class
     {
         var dbSetMock = new Mock<DbSet<TEntity>>();

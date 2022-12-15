@@ -92,7 +92,7 @@ public class TestBase<TDbContext, TEntryPoint>
 
             await TearDown(ctx);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
 
             throw;
@@ -131,7 +131,9 @@ public class TestBase<TDbContext, TEntryPoint>
     /// Will be called before every test case.
     /// </summary>
     /// <param name="ctx"></param>
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
     protected virtual async Task SetUp(TDbContext ctx)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
     {
         //Never add any code here. Only to be used by overriding.
     }
@@ -140,7 +142,9 @@ public class TestBase<TDbContext, TEntryPoint>
     /// Will be called after every test case.
     /// </summary>
     /// <param name="ctx"></param>
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
     protected virtual async Task TearDown(TDbContext ctx)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
     {
         //Never add any code here. Only to be used by overriding.
     }
