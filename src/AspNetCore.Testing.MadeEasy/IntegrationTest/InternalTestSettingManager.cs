@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 using System.IO;
 
 namespace AspNetCore.Testing.MadeEasy.IntegrationTest;
@@ -6,7 +7,7 @@ namespace AspNetCore.Testing.MadeEasy.IntegrationTest;
 /// <summary>
 /// Manages settings for the testing. It's a singleton class. To use it access it through <see cref="Current"/>
 /// </summary>
-public class InternalTestSettingManager
+internal class InternalTestSettingManager
 {
     private static InternalTestSetting _setting;
 
@@ -19,9 +20,7 @@ public class InternalTestSettingManager
 
         var configuration = builder.Build();
 
-        return configuration.GetSection(nameof(InternalTestSetting)).Get<InternalTestSetting>();
-
-
+        return configuration.GetSection("AspNetCore.Testing.MadeEasy").Get<InternalTestSetting>();
     }
 
     /// <summary>
@@ -44,7 +43,7 @@ public class InternalTestSettingManager
 /// <summary>
 /// Holds test setting data
 /// </summary>
-public class InternalTestSetting
+internal class InternalTestSetting
 {
     public bool UseExternaldb { get; set; }
     public string ConnectionString { get; set; }
@@ -55,11 +54,15 @@ public class InternalTestSetting
 /// <summary>
 /// Hold test docker db settings
 /// </summary>
-public class DockerSetting
+internal class DockerSetting
 {
+    private Dictionary<string, string> enviromentVariables;
+
     public string Image { get; set; }
     public string ContainerName { get; set; }
-    public string DbName { get; set; }
-    public string UserName { get; set; }
-    public string Password { get; set; }
+    public Dictionary<string, string> EnviromentVariables
+    {
+        get => enviromentVariables ?? new();
+        set => enviromentVariables = value;
+    }
 }
