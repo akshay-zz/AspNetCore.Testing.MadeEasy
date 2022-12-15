@@ -18,7 +18,7 @@ namespace Example.WebApi.Test.WithXunit
 			var mockContext = new Mock<DatabaseContext>();
 
 			// using lib
-			var dbset = MockDb.CreateDbSet<Person>(data2.AsQueryable());
+			var dbset = MockDb.CreateDbSet<Person>(data2);
 
 			mockContext.Setup(x => x.Person).Returns(dbset.Object);
 			var controller = new PersonController(mockContext.Object);
@@ -40,7 +40,7 @@ namespace Example.WebApi.Test.WithXunit
 			var mockContext = new Mock<DatabaseContext>();
 			
 			// using lib
-			var dbset = MockDb.CreateDbSet<Person>(new List<Person>().AsQueryable());
+			var dbset = MockDb.CreateDbSet<Person>(new List<Person>());
 			mockContext.Setup(x => x.Person).Returns(dbset.Object);
 
 			var controller = new PersonController(mockContext.Object);
