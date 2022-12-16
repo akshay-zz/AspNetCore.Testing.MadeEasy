@@ -15,7 +15,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example.WebApi", "Examples\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example.WebApi.Test.WithXunit", "Examples\Example.WebApi.Test.WithXunit\Example.WebApi.Test.WithXunit.csproj", "{AA205A2A-17EF-495D-9D0D-AB7CF29D6722}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.Testing.MadeEasy.Test", "Tests\AspNetCore.Testing.MadeEasy.Test\AspNetCore.Testing.MadeEasy.Test.csproj", "{B61085CD-9940-4D42-8CC7-0ECC325681DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Testing.MadeEasy.Test", "Tests\AspNetCore.Testing.MadeEasy.Test\AspNetCore.Testing.MadeEasy.Test.csproj", "{B61085CD-9940-4D42-8CC7-0ECC325681DD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{17A80718-203D-4E2B-8C4B-F41D6634B43C}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

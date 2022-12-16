@@ -73,13 +73,13 @@ public class TestBase<TDbContext, TEntryPoint>
 
             var ctx = scope.ServiceProvider.GetRequiredService<TDbContext>();
 
-            await SetUp(ctx);
+            await this.SetUp(ctx);
 
             if (populatedb != null)
                 await populatedb(ctx);
 
             if (addAuth)
-                AddAuthenticationToClient(client);
+                this.AddAuthenticationToClient(client);
 
             if (test != null)
                 await test(client);
@@ -90,7 +90,7 @@ public class TestBase<TDbContext, TEntryPoint>
             if (cleanDb != null)
                 await cleanDb(ctx);
 
-            await TearDown(ctx);
+            await this.TearDown(ctx);
         }
         catch (Exception)
         {

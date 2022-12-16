@@ -5,7 +5,7 @@ using Moq;
 
 namespace Example.WebApi.Test.WithXunit
 {
-	public class PersonControllerTest
+	public class PersonControllerUnitTest
 	{
 		[Fact]
 		public void Get_should_return_valid_persons()
