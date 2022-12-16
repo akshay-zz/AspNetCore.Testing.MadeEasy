@@ -22,12 +22,26 @@ public class MockDb
     /// <typeparam name="TEntity">type of entity</typeparam>
     /// <param name="data">seed data</param>
     /// <param name="find">find action</param>
+    /// <param name="entityEntry"> Entity entry</param>
     /// <returns></returns>
-    public static Mock<DbSet<TEntity>> CreateDbSet<TEntity>(ICollection<TEntity> data, Func<object[], TEntity> find = default)
+    public static Mock<DbSet<TEntity>> CreateDbSet<TEntity>(
+        ICollection<TEntity> data, Func<object[], TEntity> find = default,
+        EntityEntry<TEntity> entityEntry = default)
         where TEntity : class
     {
         var query = data.AsQueryable();
         find ??= (o => null);
+
+        // We are aware its a internal Api. But as suggested in the issue 
+        // https://github.com/dotnet/efcore/issues/27110#issuecomment-1009000699 for the time being we are mocking it.
+        // Latter if will find any better approach will implement that.
+
+        var internalEntityEntry = new InternalEntityEntry(
+            new Mock<IStateManager>().Object,
+            new RuntimeEntityType("T", typeof(TEntity), false, null, null, null, ChangeTrackingStrategy.Snapshot, null, false),
+            data);
+
+        entityEntry ??= new Mock<EntityEntry<TEntity>>(internalEntityEntry).Object;
 
         var dbSetMock = new Mock<DbSet<TEntity>>();
 
@@ -44,17 +58,6 @@ public class MockDb
         mock.As<IQueryable<TEntity>>().Setup(m => m.ElementType).Returns(query.ElementType);
         mock.As<IQueryable<TEntity>>().Setup(m => m.GetEnumerator()).Returns(() => query.GetEnumerator());
 
-        // We are aware its a internal Api. But as suggested in the issue 
-        // https://github.com/dotnet/efcore/issues/27110#issuecomment-1009000699 for the time being we are mocking it.
-        // Latter if will find any better approach will implement that.
-
-        var internalEntityEntry = new InternalEntityEntry(
-            new Mock<IStateManager>().Object,
-            new RuntimeEntityType("T", typeof(TEntity), false, null, null, null, ChangeTrackingStrategy.Snapshot, null, false),
-            data);
-
-        var entityEntry = new Mock<EntityEntry<TEntity>>(internalEntityEntry);
-
         mock.Setup(m => m.Find(It.IsAny<object[]>())).Returns(find);
 
         mock.Setup(m => m.FindAsync(It.IsAny<object[]>()))
@@ -66,17 +69,17 @@ public class MockDb
         // Add
         mock.Setup(m => m.Add(It.IsAny<TEntity>()))
             .Callback<TEntity>(entity => { data.Add(entity); })
-            .Returns(() => entityEntry.Object);
+            .Returns(() => entityEntry);
 
         // AddAsync
         mock.Setup(d => d.AddAsync(It.IsAny<TEntity>(), It.IsAny<CancellationToken>()))
             .Callback<TEntity, CancellationToken>((entity, token) => { data.Add(entity); })
-            .Returns(() => new ValueTask<EntityEntry<TEntity>>(entityEntry.Object));
+            .Returns(() => new ValueTask<EntityEntry<TEntity>>(entityEntry));
 
         // Attach
         mock.Setup(m => m.Attach(It.IsAny<TEntity>()))
             .Callback<TEntity>(entity => { data.Add(entity); })
-            .Returns(() => entityEntry.Object);
+            .Returns(() => entityEntry);
 
 
         //Remove
