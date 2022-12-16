@@ -33,7 +33,7 @@ namespace Example.WebApi.Controllers
                     Status = (Status)status
                 };
 
-                var a = context.Person!.Add(person);
+                context.Person!.Add(person);
                 context.SaveChanges();
                 return true;
 
