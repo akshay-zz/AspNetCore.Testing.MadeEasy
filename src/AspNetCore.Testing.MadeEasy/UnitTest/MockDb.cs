@@ -45,52 +45,52 @@ public class MockDb
 
         var dbSetMock = new Mock<DbSet<TEntity>>();
 
-        var mock = new Mock<DbSet<TEntity>>();
-        mock.As<IAsyncEnumerable<TEntity>>()
+        var mockSet = new Mock<DbSet<TEntity>>();
+        mockSet.As<IAsyncEnumerable<TEntity>>()
             .Setup(m => m.GetAsyncEnumerator(CancellationToken.None))
             .Returns(new InMemoryDbAsyncEnumerator<TEntity>(query.GetEnumerator()));
 
-        mock.As<IQueryable<TEntity>>()
+        mockSet.As<IQueryable<TEntity>>()
            .Setup(m => m.Provider)
            .Returns(new InMemoryAsyncQueryProvider<TEntity>(query.Provider));
 
-        mock.As<IQueryable<TEntity>>().Setup(m => m.Expression).Returns(query.Expression);
-        mock.As<IQueryable<TEntity>>().Setup(m => m.ElementType).Returns(query.ElementType);
-        mock.As<IQueryable<TEntity>>().Setup(m => m.GetEnumerator()).Returns(() => query.GetEnumerator());
+        mockSet.As<IQueryable<TEntity>>().Setup(m => m.Expression).Returns(query.Expression);
+        mockSet.As<IQueryable<TEntity>>().Setup(m => m.ElementType).Returns(query.ElementType);
+        mockSet.As<IQueryable<TEntity>>().Setup(m => m.GetEnumerator()).Returns(() => query.GetEnumerator());
 
-        mock.Setup(m => m.Find(It.IsAny<object[]>())).Returns(find);
+        mockSet.Setup(m => m.Find(It.IsAny<object[]>())).Returns(find);
 
-        mock.Setup(m => m.FindAsync(It.IsAny<object[]>()))
+        mockSet.Setup(m => m.FindAsync(It.IsAny<object[]>()))
             .Returns<object[]>(objs => new ValueTask<TEntity>(find(objs)));
 
-        mock.Setup(m => m.FindAsync(It.IsAny<object[]>(), It.IsAny<CancellationToken>()))
+        mockSet.Setup(m => m.FindAsync(It.IsAny<object[]>(), It.IsAny<CancellationToken>()))
             .Returns<object[], CancellationToken>((objs, tocken) => new ValueTask<TEntity>(find(objs)));
 
         // Add
-        mock.Setup(m => m.Add(It.IsAny<TEntity>()))
+        mockSet.Setup(m => m.Add(It.IsAny<TEntity>()))
             .Callback<TEntity>(entity => { data.Add(entity); })
             .Returns(() => entityEntry);
 
         // AddAsync
-        mock.Setup(d => d.AddAsync(It.IsAny<TEntity>(), It.IsAny<CancellationToken>()))
+        mockSet.Setup(d => d.AddAsync(It.IsAny<TEntity>(), It.IsAny<CancellationToken>()))
             .Callback<TEntity, CancellationToken>((entity, token) => { data.Add(entity); })
             .Returns(() => new ValueTask<EntityEntry<TEntity>>(entityEntry));
 
         // Attach
-        mock.Setup(m => m.Attach(It.IsAny<TEntity>()))
+        mockSet.Setup(m => m.Attach(It.IsAny<TEntity>()))
             .Callback<TEntity>(entity => { data.Add(entity); })
             .Returns(() => entityEntry);
 
 
         //Remove
-        mock.Setup(m => m.Remove(It.IsAny<TEntity>()))
+        mockSet.Setup(m => m.Remove(It.IsAny<TEntity>()))
             .Callback<TEntity>(entity => { data.Remove(entity); });
 
         // Update missing
         // public virtual EntityEntry<TEntity> Update(TEntity entity)
 
         // AddRange
-        mock.Setup(m => m.AddRange(It.IsAny<IEnumerable<TEntity>>()))
+        mockSet.Setup(m => m.AddRange(It.IsAny<IEnumerable<TEntity>>()))
             .Callback<IEnumerable<TEntity>>(entities =>
             {
                 foreach (var entity in entities.ToList())
@@ -101,7 +101,7 @@ public class MockDb
 
 
         // AddRangeAsync
-        mock.Setup(m => m.AddRangeAsync(It.IsAny<TEntity[]>()))
+        mockSet.Setup(m => m.AddRangeAsync(It.IsAny<TEntity[]>()))
             .Callback<TEntity[]>(entities =>
             {
                 foreach (var entity in entities.ToList())
@@ -112,7 +112,7 @@ public class MockDb
             .Returns(() => Task.CompletedTask);
 
         // AttachRange
-        mock.Setup(m => m.AttachRange(It.IsAny<TEntity[]>()))
+        mockSet.Setup(m => m.AttachRange(It.IsAny<TEntity[]>()))
             .Callback<TEntity[]>(entities =>
             {
                 foreach (var entity in entities.ToList())
@@ -121,7 +121,7 @@ public class MockDb
                 }
             });
 
-        mock.Setup(x => x.RemoveRange(It.IsAny<TEntity[]>()))
+        mockSet.Setup(x => x.RemoveRange(It.IsAny<TEntity[]>()))
             .Callback<TEntity[]>(entities =>
             {
                 foreach (var entity in entities.ToList())
@@ -133,7 +133,7 @@ public class MockDb
         // UpdateRange missing
         // public virtual void UpdateRange(params TEntity[] entities)
 
-        mock.Setup(m => m.AddRange(It.IsAny<TEntity[]>()))
+        mockSet.Setup(m => m.AddRange(It.IsAny<TEntity[]>()))
             .Callback<TEntity[]>(entities =>
             {
                 foreach (var entity in entities.ToList())
@@ -142,7 +142,7 @@ public class MockDb
                 }
             });
 
-        mock.Setup(m => m.AddRangeAsync(It.IsAny<IEnumerable<TEntity>>(), It.IsAny<CancellationToken>()))
+        mockSet.Setup(m => m.AddRangeAsync(It.IsAny<IEnumerable<TEntity>>(), It.IsAny<CancellationToken>()))
             .Callback<IEnumerable<TEntity>, CancellationToken>((entities, token) =>
             {
                 foreach (var entity in entities.ToList())
@@ -153,7 +153,7 @@ public class MockDb
             .Returns(Task.CompletedTask);
 
         // AttachRange
-        mock.Setup(m => m.AttachRange(It.IsAny<IEnumerable<TEntity>>()))
+        mockSet.Setup(m => m.AttachRange(It.IsAny<IEnumerable<TEntity>>()))
             .Callback<IEnumerable<TEntity>>(entities =>
             {
                 foreach (var entity in entities.ToList())
@@ -163,7 +163,7 @@ public class MockDb
             });
 
         // RemoveRange
-        mock.Setup(x => x.RemoveRange(It.IsAny<IEnumerable<TEntity>>()))
+        mockSet.Setup(x => x.RemoveRange(It.IsAny<IEnumerable<TEntity>>()))
             .Callback<IEnumerable<TEntity>>(entities =>
             {
                 foreach (var entity in entities.ToList())
@@ -172,6 +172,6 @@ public class MockDb
                 }
             });
 
-        return mock;
+        return mockSet;
     }
 }

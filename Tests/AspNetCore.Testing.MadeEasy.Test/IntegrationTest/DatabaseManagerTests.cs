@@ -2,7 +2,7 @@
 
 namespace AspNetCore.Testing.MadeEasy.Test.IntegrationTest;
 
-public class DatabaseManagerTest
+public class DatabaseManagerTests
 {
     [Fact]
     public void ConnectionString_should_return_the_configured_connection_string()

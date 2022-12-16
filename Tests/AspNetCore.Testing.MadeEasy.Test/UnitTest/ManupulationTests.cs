@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AspNetCore.Testing.MadeEasy.Test.UnitTest;
 
-public class ManupulationTest
+public class ManupulationTests
 {
     [Fact]
     public void Can_specify_asNoTracking()

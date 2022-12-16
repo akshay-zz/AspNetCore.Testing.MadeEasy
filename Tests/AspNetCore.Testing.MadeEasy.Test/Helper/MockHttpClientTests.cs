@@ -3,7 +3,7 @@ using System.Net;
 
 namespace AspNetCore.Testing.MadeEasy.Test.Helper;
 
-public class MockHttpClientTest
+public class MockHttpClientTests
 {
     private const string BaseUrl = "https://localhost.xyz";
     private const string RequestUri = $"{BaseUrl}/data";

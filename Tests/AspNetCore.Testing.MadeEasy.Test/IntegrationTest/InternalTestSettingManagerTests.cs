@@ -2,7 +2,7 @@
 
 namespace AspNetCore.Testing.MadeEasy.Test.IntegrationTest;
 
-public class InternalTestSettingManagerTest
+public class InternalTestSettingManagerTests
 {
     [Fact]
     public void Current_should_able_tp_provide_configurations_setting()
