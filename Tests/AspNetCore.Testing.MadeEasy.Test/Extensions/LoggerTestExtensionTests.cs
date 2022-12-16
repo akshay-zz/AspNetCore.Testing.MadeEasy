@@ -4,7 +4,7 @@ using Moq;
 
 namespace AspNetCore.Testing.MadeEasy.Test.Extensions;
 
-public class LoggerTestExtensionTest
+public class LoggerTestExtensionTests
 {
     [Fact]
     public void Test()

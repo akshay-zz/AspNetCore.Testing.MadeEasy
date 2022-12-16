@@ -3,7 +3,7 @@ using AspNetCore.Testing.MadeEasy.UnitTest;
 
 namespace AspNetCore.Testing.MadeEasy.Test.Extensions;
 
-public class DatabaseRelatedExtensionsTest
+public class DatabaseRelatedExtensionsTests
 {
     [Fact]
     public void Clear_should_remove_all_data()
