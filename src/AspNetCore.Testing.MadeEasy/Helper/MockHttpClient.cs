@@ -31,9 +31,9 @@ public class MockHttpClient
         string subUrl,
         string response,
         HttpStatusCode responseStatusCode,
-        string clientName = "",
         HttpMethod httpMethod = default,
-        IList<KeyValuePair<string, string>> headers = default)
+        IList<KeyValuePair<string, string>> headers = default,
+        string clientName = "")
     {
         var _handlerMock = new Mock<HttpMessageHandler>();
         var _httpClientFactory = new Mock<IHttpClientFactory>();
@@ -62,9 +62,8 @@ public class MockHttpClient
         return (_httpClientFactory, _handlerMock);
     }
 
-    private static Func<HttpRequestMessage, IList<KeyValuePair<string, string>>, bool> CheckHeaders =
-        delegate (HttpRequestMessage httpRequest, IList<KeyValuePair<string, string>> headers)
-        {
+    private static readonly Func<HttpRequestMessage, IList<KeyValuePair<string, string>>, bool> CheckHeaders =
+        delegate (HttpRequestMessage httpRequest, IList<KeyValuePair<string, string>> headers) {
             if (headers == default)
                 return true;
 

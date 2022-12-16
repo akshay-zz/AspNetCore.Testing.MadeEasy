@@ -25,13 +25,13 @@ public class DatabaseManager
     private static TestcontainersContainer GetTestContainer()
     {
         return new TestcontainersBuilder<TestcontainersContainer>()
-        .WithImage(InternalTestSettingManager.Current.DockerDb.Image)
-        .WithName(InternalTestSettingManager.Current.DockerDb.ContainerName)
-        .WithEnvironment(InternalTestSettingManager.Current.DockerDb.EnviromentVariables)
-        .WithCleanUp(true)
-        .WithPortBinding(5432, 5432)
-        .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
-        .Build();
+                .WithImage(InternalTestSettingManager.Current.DockerDb.Image)
+                .WithName(InternalTestSettingManager.Current.DockerDb.ContainerName)
+                .WithEnvironment(InternalTestSettingManager.Current.DockerDb.EnviromentVariables)
+                .WithCleanUp(true)
+                .WithPortBinding(5432, 5432)
+                .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
+                .Build();
     }
 
     /// <summary>
@@ -56,11 +56,6 @@ public class DatabaseManager
     /// <summary>
     /// Provide connection string of the test database.
     /// </summary>
-    public static string ConnectionString
-    {
-        get
-        {
-            return InternalTestSettingManager.Current.ConnectionString;
-        }
-    }
+    public static string ConnectionString 
+        => InternalTestSettingManager.Current.ConnectionString;
 }
