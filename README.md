@@ -2,8 +2,26 @@
 
 **AspNetCore.Testing.MadeEasy** provides as implementation of `DbAsyncQueryProvider` that can be used when testing a component that uses async queries with EntityFramework. Also it's provides utlity to run database though docker for testing and dispose them automatically after running all the test cases.
 
+---
 
-The following samples unit and integration tests are based on this Controller：
+Unit test cases set up is quite inspired from [EntityFramework.Testing](https://github.com/scott-xu/EntityFramework.Testing). But for Ef core.
+
+It supports mock of following opeartions:
+
+- `Find`
+- `FindAsync`
+- `Add`
+- `AddAsync`
+- `Attach`
+- `Remove`
+- `AddRange`
+- `AddRangeAsync`
+- `AttachRange`
+- `RemoveRange`
+- `AddRange`
+
+
+### The following samples unit and integration tests are based on this Controller：
 
 ```C#
 public class PersonController : ControllerBase
@@ -24,7 +42,7 @@ public class PersonController : ControllerBase
 }
 ```
 
-You can write a **unit test** against a mock context as follows.
+### You can write a **unit test** against a mock context as follows.
 ```C#
 [Fact]
 public void Get_should_return_valid_persons()
@@ -39,7 +57,7 @@ public void Get_should_return_valid_persons()
     var mockContext = new Mock<DatabaseContext>();
 
     // using lib
-    var dbset = MockDb.CreateDbSet<Person>(data.AsQueryable());
+    var dbset = MockDb.CreateDbSet<Person>(data);
 
     mockContext.Setup(x => x.Person).Returns(dbset.Object);
     var controller = new PersonController(mockContext.Object);
@@ -48,33 +66,37 @@ public void Get_should_return_valid_persons()
     Assert.Equal(data, result);
 }
 ```
+---
+### You can write a **integration test** against a real db as follows.
 
-You can write a **integration test** against a mock context as follows.
+Under the hood we are using [Testcontainer](https://github.com/testcontainers/testcontainers-dotnet) to run the docker container. This lib provides some support functions to quickly run the container and setup you test cases.
 
 - Configure `appsettings.Testing.json`
 ```JSON
 {
-  "InternalTestSetting": {
+  "AspNetCore.Testing.MadeEasy": {
     "UseExternaldb": false,
-    "ConnectionString": "",
+    "ConnectionString": "Server=localhost;database=example;User Id=postgres;password=welcome;port=5432;",
     "DockerDb": {
       "Image": "kartoza/postgis",
       "ContainerName": "example_postgris",
-      "DbName": "example",
-      "UserName": "postgres",
-      "Password": "welcome"
+      "EnviromentVariables": {
+        "POSTGRES_USER": "postgres",
+        "POSTGRES_PASSWORD": "welcome",
+        "POSTGRES_DB": "example"
+      }
     }
   }
 }
 ```
 
-- Get your container and start it
+- Get your database container and start it
 ```C#
-var container = PostgresDbManager.GetTestContainer();
-await container.StartAsync();
+var manager = DatabaseManager();
+await manager.SpinContainer();
 ```
 
-- Run you taste case by inhereting TestBase and override to configure service. Like database.
+- Run you test case by inhereting TestBase and override ConfigureServices to inject any service for the test case.
 ```C#
 public class IntegrationTest : TestBase<DatabaseContext, Program>
 {
@@ -107,13 +129,14 @@ public class IntegrationTest : TestBase<DatabaseContext, Program>
         services.AddEntityFrameworkNpgsql().AddDbContext<DatabaseContext>(
             opt =>
             {
-                opt.UseNpgsql(PostgresDbManager.ConnectionString, o => o.UseNetTopologySuite());
+                opt.UseNpgsql(DatabaseManager.ConnectionString, o => o.UseNetTopologySuite());
             });
     }
 }
 ```
-- Finally stop and dispose the container
+- Finally stop database container
 ```C#
-await container.StopAsync();
-await container.DisposeAsync();
+await manager.StopContainer();
 ```
+
+For detail example you can refere this [link](`https://github.com/akshay-zz/AspNetCore.Testing.MadeEasy/blob/main/Examples/Example.WebApi.Test.WithXunit/IntegrationTest.cs`)
