@@ -150,3 +150,26 @@ await manager.StopContainer();
 ```
 
 For a detailed example, you can refer to this [link](https://github.com/akshay-zz/AspNetCore.Testing.MadeEasy/blob/main/Examples/Example.WebApi.Test.WithXunit/IntegrationTest.cs)
+
+### Other useful method
+- Extension for logger
+```C#
+var logger = new Mock<ILogger<MyClass>>();
+_ = new MyClass(logger.Object);
+logger.VerifyLogging("Test information", LogLevel.Information);
+logger.VerifyLogging("Some error", LogLevel.Error, Times.Exactly(2));
+```
+- Create mock HttpClientFactory
+
+```C#
+ var (factory, httpMessageHandler) = MockHttpClient.GetMockedNamedHttpClientFactory(
+            baseUrl: "https://localhost.xyz",
+            subUrl: "/data",
+            response: @"{""name"":""Alex""}",
+            responseStatusCode: HttpStatusCode.OK,
+            httpMethod: HttpMethod.Get);
+
+_ = new MyClass(factory.Object);
+
+handler.VerifyAll();
+```

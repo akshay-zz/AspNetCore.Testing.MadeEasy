@@ -14,10 +14,10 @@ public static class LoggerTestExtension
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="logger"></param>
-    /// <param name="expectedMessage"></param>
-    /// <param name="expectedLogLevel"></param>
-    /// <param name="times"></param>
-    /// <param name="exactMessage"></param>
+    /// <param name="expectedMessage">message to verify</param>
+    /// <param name="expectedLogLevel">Log level</param>
+    /// <param name="times">number of times</param>
+    /// <param name="exactMessage">check for contains</param>
     /// <returns></returns>
     public static Mock<ILogger<T>> VerifyLogging<T>(this Mock<ILogger<T>> logger,
         string expectedMessage, LogLevel expectedLogLevel, Times? times = null, bool exactMessage = true)
