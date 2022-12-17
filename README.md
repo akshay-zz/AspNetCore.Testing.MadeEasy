@@ -139,4 +139,4 @@ public class IntegrationTest : TestBase<DatabaseContext, Program>
 await manager.StopContainer();
 ```
 
-For detail example you can refere this [link](`https://github.com/akshay-zz/AspNetCore.Testing.MadeEasy/blob/main/Examples/Example.WebApi.Test.WithXunit/IntegrationTest.cs`)
+For detail example you can refere this [link](https://github.com/akshay-zz/AspNetCore.Testing.MadeEasy/blob/main/Examples/Example.WebApi.Test.WithXunit/IntegrationTest.cs)
