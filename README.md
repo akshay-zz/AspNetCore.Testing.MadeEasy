@@ -1,6 +1,6 @@
-# AspNetCore.Testing.MadeEasy
+# AspNetCore.Testing.MadeEasy [![NuGet Version](https://img.shields.io/nuget/v/AspNetCore.Testing.MadeEasy.svg?plastic=flat)](https://www.nuget.org/packages/AspNetCore.Testing.MadeEasy/1.0.0-beta1)
 
-**AspNetCore.Testing.MadeEasy** provides as implementation of `DbAsyncQueryProvider` that can be used when testing a component that uses async queries with EntityFramework. Also it's provides utlity to run database though docker for testing and dispose them automatically after running all the test cases.
+**AspNetCore.Testing.MadeEasy** provides as implementation of `DbAsyncQueryProvider` that can be used when testing a component that uses async queries with EntityFrameworkCore. Also it's provides utlity to run database through docker for testing and dispose them automatically after running all the test cases.
 
 ---
 
@@ -42,7 +42,7 @@ public class PersonController : ControllerBase
 }
 ```
 
-### You can write a **unit test** against a mock context as follows.
+### One can write a **unit test** against a mock context as follows.
 ```C#
 [Fact]
 public void Get_should_return_valid_persons()
@@ -67,9 +67,9 @@ public void Get_should_return_valid_persons()
 }
 ```
 ---
-### You can write a **integration test** against a real db as follows.
+### One can write a **integration test** against a real database as follows.
 
-Under the hood we are using [Testcontainer](https://github.com/testcontainers/testcontainers-dotnet) to run the docker container. This lib provides some support functions to quickly run the container and setup you test cases.
+Under the hood, it is using [Testcontainer](https://github.com/testcontainers/testcontainers-dotnet) to run the docker container.  This library provides some support functions to quickly run the container and set up one's test cases.
 
 - Configure `appsettings.Testing.json`
 ```JSON
@@ -90,13 +90,13 @@ Under the hood we are using [Testcontainer](https://github.com/testcontainers/te
 }
 ```
 
-- Get your database container and start it
+- Get database container and start it
 ```C#
 var manager = DatabaseManager();
 await manager.SpinContainer();
 ```
 
-- Run you test case by inhereting TestBase and override ConfigureServices to inject any service for the test case.
+- One can run a test case by inheriting TestBase and overriding ConfigureServices to inject any service for the test case.
 ```C#
 public class IntegrationTest : TestBase<DatabaseContext, Program>
 {
@@ -134,9 +134,9 @@ public class IntegrationTest : TestBase<DatabaseContext, Program>
     }
 }
 ```
-- Finally stop database container
+- Finally stop the database container
 ```C#
 await manager.StopContainer();
 ```
 
-For detail example you can refere this [link](https://github.com/akshay-zz/AspNetCore.Testing.MadeEasy/blob/main/Examples/Example.WebApi.Test.WithXunit/IntegrationTest.cs)
+For a detailed example, you can refer to this [link](https://github.com/akshay-zz/AspNetCore.Testing.MadeEasy/blob/main/Examples/Example.WebApi.Test.WithXunit/IntegrationTest.cs)
