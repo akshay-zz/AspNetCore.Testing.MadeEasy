@@ -16,7 +16,7 @@ namespace AspNetCore.Testing.MadeEasy.Helper;
 public class MockHttpClient
 {
     /// <summary>
-    /// Setup mocked HttpClientFactory & HttpMessageHandler
+    /// Setup mocked HttpClientFactory and HttpMessageHandler
     /// </summary>
     /// <param name="baseUrl"></param>
     /// <param name="subUrl"></param>
