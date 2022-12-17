@@ -63,7 +63,7 @@ public void Get_should_return_valid_persons()
     var controller = new PersonController(mockContext.Object);
     var result = controller.Get();
 
-    Assert.Equal(data, result);
+    Assert.Equal(3, result.Count);
 }
 ```
 ---
