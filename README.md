@@ -1,6 +1,8 @@
 # AspNetCore.Testing.MadeEasy [![NuGet Version](https://img.shields.io/nuget/v/AspNetCore.Testing.MadeEasy.svg?plastic=flat)](https://www.nuget.org/packages/AspNetCore.Testing.MadeEasy/1.0.0-beta1)
 
-**AspNetCore.Testing.MadeEasy** provides as implementation of `DbAsyncQueryProvider` that can be used when testing a component that uses async queries with EntityFrameworkCore. Also it's provides utlity to run database through docker for testing and dispose them automatically after running all the test cases.
+**AspNetCore.Testing.MadeEasy** provides as implementation of `DbAsyncQueryProvider` that can be used when testing a component that uses async queries with EntityFrameworkCore. Also it's provides utility to run database through docker for testing and dispose them automatically once container is being stopped.
+
+It also comes with some helpful extensions and mock functionality to easy the testing through [Moq](https://github.com/moq/moq)
 
 ---
 
@@ -21,7 +23,7 @@ It supports mock of following opeartions:
 - `AddRange`
 
 
-### The following samples unit and integration tests are based on this Controller：
+### The following samples of unit and integration tests are based on this Controller：
 
 ```C#
 public class PersonController : ControllerBase
@@ -96,7 +98,7 @@ var manager = DatabaseManager();
 await manager.SpinContainer();
 ```
 
-- One can run a test case by inheriting TestBase and overriding ConfigureServices to inject any service for the test case.
+- One can run a test case by inheriting TestBase and overriding ConfigureServices to inject any service for the test case. Although it is better to not run integration test case in parallel as they are sharing resources like database. Check test case framework you are using for running the test cases in order.  
 ```C#
 public class IntegrationTest : TestBase<DatabaseContext, Program>
 {
@@ -109,6 +111,10 @@ public class IntegrationTest : TestBase<DatabaseContext, Program>
                 await ctx.Person!.AddAsync(person);
                 await ctx.SaveChangesAsync();
             },
+            addAuth: async client =>
+            {
+                /*Add auth headers to the client*/
+            },
             test: async client =>
             {
                 var response = await client.GetAsync("/person");
@@ -116,6 +122,10 @@ public class IntegrationTest : TestBase<DatabaseContext, Program>
                 var data = content.RootElement.EnumerateArray().ToList();
 
                 Assert.Single(data);
+            },
+            validateDb: async ctx =>
+            {
+                /*It can be used to validate data exist or not in case or update/insert and for some other cases */
             },
             cleanDb: async ctx =>
             {
