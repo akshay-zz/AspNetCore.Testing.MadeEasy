@@ -11,6 +11,42 @@ using System.Threading.Tasks;
 namespace AspNetCore.Testing.MadeEasy.Helper;
 
 /// <summary>
+/// Model to hold detaild of mock http client
+/// </summary>
+public class MockClientDetail
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public string BaseUrl { get; set; } = string.Empty;
+    /// <summary>
+    /// 
+    /// </summary>
+    public string Path { get; set; } = string.Empty;
+    /// <summary>
+    /// 
+    /// </summary>
+    public string Response { get; set; } = string.Empty;
+    /// <summary>
+    /// 
+    /// </summary>
+    public HttpMethod Method { get; set; }
+    /// <summary>
+    /// 
+    /// </summary>
+    public HttpStatusCode StatusCode { get; set; }
+    /// <summary>
+    /// 
+    /// </summary>
+    public List<KeyValuePair<string, string>> Headers { get; set; } = new();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public HttpResponseMessage ResponseMessage { get; set; } = default;
+}
+
+/// <summary>
 /// Helper method for http client
 /// </summary>
 public class MockHttpClient
@@ -25,6 +61,7 @@ public class MockHttpClient
     /// <param name="clientName"></param>
     /// <param name="httpMethod"></param>
     /// <param name="headers"></param>
+    /// <param name="responseMessage"></param>
     /// <returns></returns>
     public static (Mock<IHttpClientFactory>, Mock<HttpMessageHandler>) GetMockedNamedHttpClientFactory(
         string baseUrl,
@@ -33,8 +70,14 @@ public class MockHttpClient
         HttpStatusCode responseStatusCode,
         HttpMethod httpMethod = default,
         IList<KeyValuePair<string, string>> headers = default,
+        HttpResponseMessage responseMessage = default,
         string clientName = "")
     {
+        if ((string.IsNullOrWhiteSpace(baseUrl) && string.IsNullOrWhiteSpace(subUrl)) && httpMethod == default)
+        {
+            throw new ArgumentException("Invalid data! BaseUrl or Path mandatory along with method type");
+        }
+
         var _handlerMock = new Mock<HttpMessageHandler>();
         var _httpClientFactory = new Mock<IHttpClientFactory>();
 
@@ -52,7 +95,7 @@ public class MockHttpClient
                 (httpMethod == default || x.Method == httpMethod) &&
                 CheckHeaders(x, headers)),
                 ItExpr.IsAny<CancellationToken>())
-            .ReturnsAsync(contentToReturn)
+            .ReturnsAsync(responseMessage ?? contentToReturn)
             .Verifiable();
 
         _httpClientFactory.Setup(x => x.CreateClient(clientName))
@@ -62,13 +105,65 @@ public class MockHttpClient
         return (_httpClientFactory, _handlerMock);
     }
 
+    /// <summary>
+    /// Setup mock HttpClientFactory and HttpMessageHandler
+    /// </summary>
+    /// <param name="mockClientDetails"></param>
+    /// <param name="clientName"></param>
+    /// <returns></returns>
+    public static (Mock<IHttpClientFactory>, Mock<HttpMessageHandler>) GetMockedNamedHttpClientFactory(
+        List<MockClientDetail> mockClientDetails, string clientName = "")
+    {
+        var validData = mockClientDetails.Where(
+            x => (!string.IsNullOrWhiteSpace(x.BaseUrl) || !string.IsNullOrWhiteSpace(x.Path)) &&
+            x.Method != default).ToList();
+
+        if (validData.Count != mockClientDetails.Count)
+        {
+            throw new ArgumentException("Invalid data! BaseUrl or Path mandatory along with method type");
+        }
+
+        var _handlerMock = new Mock<HttpMessageHandler>();
+        var _httpClientFactory = new Mock<IHttpClientFactory>();
+
+
+        foreach (var detail in mockClientDetails)
+        {
+            _handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.Is<HttpRequestMessage>(x =>
+                    x.RequestUri == new Uri($"{detail.BaseUrl}{detail.Path}") &&
+                    (x.Method == detail.Method) && CheckHeaders(x, detail.Headers)),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(
+                    detail.ResponseMessage ??
+                    new HttpResponseMessage
+                    {
+                        Content = new StringContent(detail.Response),
+                        StatusCode = detail.StatusCode,
+                    }
+                 ).Verifiable();
+        }
+
+        _httpClientFactory.Setup(x => x.CreateClient(clientName))
+            .Returns(new HttpClient(_handlerMock.Object))
+            .Verifiable();
+
+        return (_httpClientFactory, _handlerMock);
+    }
+
+
     private static readonly Func<HttpRequestMessage, IList<KeyValuePair<string, string>>, bool> CheckHeaders =
         delegate (HttpRequestMessage httpRequest, IList<KeyValuePair<string, string>> headers) {
-            if (headers == default)
+
+            if (headers == null || !headers.Any())
+            {
                 return true;
+            }
 
             var count = headers
-               .Where(h => httpRequest.Headers.Any(p => p.Key == h.Key))
+               .Where(h => httpRequest.Headers.Any(p => p.Key == h.Key && p.Value.Contains(h.Value)))
                .Count();
             return count > 0;
         };
