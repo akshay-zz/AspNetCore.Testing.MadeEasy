@@ -16,32 +16,32 @@ namespace AspNetCore.Testing.MadeEasy.Helper;
 public class MockClientDetail
 {
     /// <summary>
-    /// 
+    /// Base address of the url
     /// </summary>
     public string BaseUrl { get; set; } = string.Empty;
     /// <summary>
-    /// 
+    /// Subdirectory of the url
     /// </summary>
     public string Path { get; set; } = string.Empty;
     /// <summary>
-    /// 
+    /// Response of the mocked url, it will be overrided if <see cref="ResponseMessage"/> is passed
     /// </summary>
     public string Response { get; set; } = string.Empty;
     /// <summary>
-    /// 
+    /// Http method to mock
     /// </summary>
     public HttpMethod Method { get; set; }
     /// <summary>
-    /// 
+    /// Response status code, it will be overrided if <see cref="ResponseMessage"/> is passed
     /// </summary>
     public HttpStatusCode StatusCode { get; set; }
     /// <summary>
-    /// 
+    /// To verify header for the api call
     /// </summary>
     public List<KeyValuePair<string, string>> Headers { get; set; } = new();
 
     /// <summary>
-    /// 
+    /// Custom <see cref="HttpResponseMessage"/>
     /// </summary>
     public HttpResponseMessage ResponseMessage { get; set; } = default;
 }
@@ -68,12 +68,12 @@ public class MockHttpClient
         string subUrl,
         string response,
         HttpStatusCode responseStatusCode,
-        HttpMethod httpMethod = default,
+        HttpMethod httpMethod,
         IList<KeyValuePair<string, string>> headers = default,
         HttpResponseMessage responseMessage = default,
         string clientName = "")
     {
-        if ((string.IsNullOrWhiteSpace(baseUrl) && string.IsNullOrWhiteSpace(subUrl)) && httpMethod == default)
+        if ((string.IsNullOrWhiteSpace(baseUrl) && string.IsNullOrWhiteSpace(subUrl)) || httpMethod == default)
         {
             throw new ArgumentException("Invalid data! BaseUrl or Path mandatory along with method type");
         }

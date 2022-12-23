@@ -20,7 +20,9 @@ public class MockHttpClientTests
             responseStatusCode: HttpStatusCode.OK,
             httpMethod: HttpMethod.Get);
 
-        var response = await CallHttpClient(factory.Object);
+        var client = factory.Object.CreateClient();
+        var response = await client.GetAsync(RequestUri);
+
         var content = await response.Content.ReadAsStringAsync();
 
         Assert.Equal(data, content);
@@ -41,7 +43,8 @@ public class MockHttpClientTests
             clientName: "Test",
             httpMethod: HttpMethod.Get);
 
-        var response = await CallNamedHttpClient(factory.Object);
+        var client = factory.Object.CreateClient("Test");
+        var response = await client.GetAsync(RequestUri);
         var content = await response.Content.ReadAsStringAsync();
 
         Assert.Equal(data, content);
@@ -66,7 +69,10 @@ public class MockHttpClientTests
             headers: headers,
             httpMethod: HttpMethod.Get);
 
-        var response = await CallNamedHttpClientWithHeader(factory.Object);
+        var client = factory.Object.CreateClient("Test");
+        client.DefaultRequestHeaders.Add("Accept", "application/json");
+        var response = await client.GetAsync(RequestUri);
+
         var content = await response.Content.ReadAsStringAsync();
 
         Assert.Equal(data, content);
@@ -76,23 +82,33 @@ public class MockHttpClientTests
 
     }
 
-    private static async Task<HttpResponseMessage> CallNamedHttpClientWithHeader(IHttpClientFactory factory)
+    [Theory]
+    [InlineData("", "")]
+    [InlineData("  ", "  ")]
+    public void GetMockedNamedHttpClientFactory_able_to_validate_invalid_address(
+       string baseUrl, string path)
     {
-        var client = factory.CreateClient("Test");
-        client.DefaultRequestHeaders.Add("Accept", "application/json");
-        return await client.GetAsync(RequestUri);
+        Assert.Throws<ArgumentException>(() => MockHttpClient.GetMockedNamedHttpClientFactory(
+              baseUrl: baseUrl,
+              subUrl: path,
+              response: "{}",
+              responseStatusCode: HttpStatusCode.OK,
+              clientName: "Test",
+              headers: default,
+              httpMethod: HttpMethod.Get));
     }
 
-    private static async Task<HttpResponseMessage> CallNamedHttpClient(IHttpClientFactory factory)
+    [Fact]
+    public void GetMockedNamedHttpClientFactory_able_to_validate_invalid_httpmethod()
     {
-        var client = factory.CreateClient("Test");
-        return await client.GetAsync(RequestUri);
-    }
-
-    private static async Task<HttpResponseMessage> CallHttpClient(IHttpClientFactory factory)
-    {
-        var client = factory.CreateClient();
-        return await client.GetAsync(RequestUri);
+        Assert.Throws<ArgumentException>(() => MockHttpClient.GetMockedNamedHttpClientFactory(
+              baseUrl: BaseUrl,
+              subUrl: "/somepath",
+              response: "{}",
+              responseStatusCode: HttpStatusCode.OK,
+              clientName: "Test",
+              headers: default,
+              httpMethod: default));
     }
 }
 
