@@ -54,14 +54,14 @@ public class MockHttpClient
     /// <summary>
     /// Setup mocked HttpClientFactory and HttpMessageHandler
     /// </summary>
-    /// <param name="baseUrl"></param>
-    /// <param name="subUrl"></param>
-    /// <param name="response"></param>
-    /// <param name="responseStatusCode"></param>
-    /// <param name="clientName"></param>
-    /// <param name="httpMethod"></param>
-    /// <param name="headers"></param>
-    /// <param name="responseMessage"></param>
+    /// <param name="baseUrl">base url</param>
+    /// <param name="subUrl">path of the url</param>
+    /// <param name="response">response content to be mocked</param>
+    /// <param name="responseStatusCode">response http status code to be mocked</param>
+    /// <param name="clientName">name of the client for Http client factory</param>
+    /// <param name="httpMethod">http method to be mocked</param>
+    /// <param name="headers">verify headers client should get called with</param>
+    /// <param name="responseMessage"><see cref="HttpResponseMessage"></see>, it will override the response and response status code that is passed</param>
     /// <returns></returns>
     public static (Mock<IHttpClientFactory>, Mock<HttpMessageHandler>) GetMockedNamedHttpClientFactory(
         string baseUrl,
@@ -106,7 +106,7 @@ public class MockHttpClient
     }
 
     /// <summary>
-    /// Setup mock HttpClientFactory and HttpMessageHandler
+    /// Setup mock HttpClientFactory and HttpMessageHandler with multiple address and http method
     /// </summary>
     /// <param name="mockClientDetails"></param>
     /// <param name="clientName"></param>
