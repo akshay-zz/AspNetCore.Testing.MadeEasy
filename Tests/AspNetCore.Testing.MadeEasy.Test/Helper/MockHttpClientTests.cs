@@ -29,7 +29,6 @@ public class MockHttpClientTests
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
-
     [Fact]
     public async Task GetMockedNamedHttpClientFactory_should_return_mockedhttpclient_as_configured_for_named_client()
     {
@@ -85,8 +84,7 @@ public class MockHttpClientTests
     [Theory]
     [InlineData("", "")]
     [InlineData("  ", "  ")]
-    public void GetMockedNamedHttpClientFactory_able_to_validate_invalid_address(
-       string baseUrl, string path)
+    public void GetMockedNamedHttpClientFactory_able_to_validate_invalid_address(string baseUrl, string path)
     {
         Assert.Throws<ArgumentException>(() => MockHttpClient.GetMockedNamedHttpClientFactory(
               baseUrl: baseUrl,
@@ -109,6 +107,68 @@ public class MockHttpClientTests
               clientName: "Test",
               headers: default,
               httpMethod: default));
+    }
+
+    [Fact]
+    public async Task GetMockedHttpClient_should_return_httpclient_as_configured()
+    {
+        var data = @"{""name"":""Chintu""}";
+
+        var (client, _) = MockHttpClient.GetMockedHttpClient(
+            baseUrl: BaseUrl,
+            subUrl: "/data",
+            response: data,
+            responseStatusCode: HttpStatusCode.OK,
+            httpMethod: HttpMethod.Get);
+
+        var response = await client.GetAsync(RequestUri);
+
+        var content = await response.Content.ReadAsStringAsync();
+
+        Assert.Equal(data, content);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetMockedHttpClient_should_able_to_verify_headers()
+    {
+        var data = @"{""name"":""Chintu""}";
+        var headers = new List<KeyValuePair<string, string>>
+        {
+            new KeyValuePair<string, string>("Accept", "application/json")
+        };
+
+        var (client, handler) = MockHttpClient.GetMockedHttpClient(
+            baseUrl: BaseUrl,
+            subUrl: "/data",
+            response: data,
+            responseStatusCode: HttpStatusCode.OK,
+            headers: headers,
+            httpMethod: HttpMethod.Get);
+
+        client.DefaultRequestHeaders.Add("Accept", "application/json");
+        var response = await client.GetAsync(RequestUri);
+
+        var content = await response.Content.ReadAsStringAsync();
+
+        Assert.Equal(data, content);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        handler.VerifyAll();
+    }
+
+    [Theory]
+    [InlineData("", "")]
+    [InlineData("  ", "  ")]
+    public void GetMockedHttpClient_able_to_validate_invalid_address(string baseUrl, string path)
+    {
+        Assert.Throws<ArgumentException>(() => MockHttpClient.GetMockedHttpClient(
+              baseUrl: baseUrl,
+              subUrl: path,
+              response: "{}",
+              responseStatusCode: HttpStatusCode.OK,
+              headers: default,
+              httpMethod: HttpMethod.Get));
     }
 }
 
@@ -279,8 +339,7 @@ public class MockHttpClientForMultipleUrlTests
     [Theory]
     [InlineData("", "")]
     [InlineData("  ", "  ")]
-    public void GetMockedNamedHttpClientFactory_able_to_validate_multiple_invalid_address(
-        string baseUrl, string path)
+    public void GetMockedNamedHttpClientFactory_able_to_validate_multiple_invalid_address(string baseUrl, string path)
     {
         var setup = new MockClientDetail()
         {
@@ -318,6 +377,204 @@ public class MockHttpClientForMultipleUrlTests
         var setups = new List<MockClientDetail> { setup };
 
         Assert.Throws<ArgumentException>(() => MockHttpClient.GetMockedNamedHttpClientFactory(setups));
+
+    }
+
+    [Fact]
+    public async Task GetMockedHttpClient_should_able_to_configure_multiple_url()
+    {
+        var firstSetup = new MockClientDetail()
+        {
+            BaseUrl = BaseUrl,
+            Path = "/response1",
+            Method = HttpMethod.Get,
+            Response = @"{""name"":""response 1""}",
+            StatusCode = HttpStatusCode.OK,
+        };
+
+        var secondSetup = new MockClientDetail()
+        {
+            BaseUrl = BaseUrl,
+            Path = "/response2",
+            Method = HttpMethod.Get,
+            Response = @"{""error"":""Invalid request""}",
+            StatusCode = HttpStatusCode.BadRequest,
+        };
+
+        var setups = new List<MockClientDetail> { firstSetup, secondSetup };
+
+        var (client, _) = MockHttpClient.GetMockedHttpClient(setups);
+
+        var response1 = await client.GetAsync($"{BaseUrl}/response1");
+        var content1 = await response1.Content.ReadAsStringAsync();
+        var response2 = await client.GetAsync($"{BaseUrl}/response2");
+        var content2 = await response2.Content.ReadAsStringAsync();
+
+        Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, response2.StatusCode);
+
+        Assert.Equal(@"{""name"":""response 1""}", content1);
+        Assert.Equal(@"{""error"":""Invalid request""}", content2);
+    }
+
+    [Fact]
+    public async Task GetMockedHttpClient_should_able_to_configure_different_baseurl()
+    {
+        var firstSetup = new MockClientDetail()
+        {
+            BaseUrl = $"{BaseUrl}new",
+            Path = "/response1",
+            Method = HttpMethod.Get,
+            Response = @"{""name"":""response 1""}",
+            StatusCode = HttpStatusCode.OK,
+        };
+
+        var secondSetup = new MockClientDetail()
+        {
+            BaseUrl = BaseUrl,
+            Path = "/response2",
+            Method = HttpMethod.Get,
+            Response = @"{""error"":""Invalid request""}",
+            StatusCode = HttpStatusCode.BadRequest,
+        };
+
+        var setups = new List<MockClientDetail> { firstSetup, secondSetup };
+
+        var (client, _) = MockHttpClient.GetMockedHttpClient(setups);
+
+        var response1 = await client.GetAsync($"{BaseUrl}new/response1");
+        var content1 = await response1.Content.ReadAsStringAsync();
+        var response2 = await client.GetAsync($"{BaseUrl}/response2");
+        var content2 = await response2.Content.ReadAsStringAsync();
+
+        Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, response2.StatusCode);
+
+        Assert.Equal(@"{""name"":""response 1""}", content1);
+        Assert.Equal(@"{""error"":""Invalid request""}", content2);
+    }
+
+    [Fact]
+    public async Task GetMockedHttpClient_should_able_to_handle_if_mocked_url_is_not_getting_called()
+    {
+        var firstSetup = new MockClientDetail()
+        {
+            BaseUrl = $"{BaseUrl}new",
+            Path = "/response1",
+            Method = HttpMethod.Get,
+            Response = @"{""name"":""response 1""}",
+            StatusCode = HttpStatusCode.OK,
+        };
+
+        var secondSetup = new MockClientDetail()
+        {
+            BaseUrl = BaseUrl,
+            Path = "/response2",
+            Method = HttpMethod.Get,
+            Response = @"{""error"":""Invalid request""}",
+            StatusCode = HttpStatusCode.BadRequest,
+        };
+
+        var setups = new List<MockClientDetail> { firstSetup, secondSetup };
+
+        var (client, _) = MockHttpClient.GetMockedHttpClient(setups);
+
+        var response1 = await client.GetAsync($"{BaseUrl}new/response1");
+        var content1 = await response1.Content.ReadAsStringAsync();
+
+        Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
+        Assert.Equal(@"{""name"":""response 1""}", content1);
+    }
+
+    [Fact]
+    public async Task GetMockedHttpClient_should_able_to_configure_headers()
+    {
+        var firstSetup = new MockClientDetail()
+        {
+            BaseUrl = BaseUrl,
+            Path = "/response1",
+            Method = HttpMethod.Get,
+            Response = @"{""name"":""response 1""}",
+            StatusCode = HttpStatusCode.OK,
+            Headers = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("Accept", "application/json")
+            }
+        };
+
+        var secondSetup = new MockClientDetail()
+        {
+            BaseUrl = BaseUrl,
+            Path = "/response2",
+            Method = HttpMethod.Get,
+            Response = @"{""error"":""Invalid request""}",
+            StatusCode = HttpStatusCode.BadRequest,
+            Headers = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("Accept", "application/xml")
+            }
+        };
+
+        var setups = new List<MockClientDetail> { firstSetup, secondSetup };
+
+        var (client, _) = MockHttpClient.GetMockedHttpClient(setups);
+
+        client.DefaultRequestHeaders.Add("Accept", "application/json");
+        client.DefaultRequestHeaders.Add("Accept", "application/xml");
+
+        var response1 = await client.GetAsync($"{BaseUrl}/response1");
+        var content1 = await response1.Content.ReadAsStringAsync();
+        var response2 = await client.GetAsync($"{BaseUrl}/response2");
+        var content2 = await response2.Content.ReadAsStringAsync();
+
+        Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, response2.StatusCode);
+
+        Assert.Equal(@"{""name"":""response 1""}", content1);
+        Assert.Equal(@"{""error"":""Invalid request""}", content2);
+    }
+
+    [Theory]
+    [InlineData("", "")]
+    [InlineData("  ", "  ")]
+    public void GetMockedHttpClient_able_to_validate_multiple_invalid_address(string baseUrl, string path)
+    {
+        var setup = new MockClientDetail()
+        {
+            BaseUrl = baseUrl,
+            Path = path,
+            Method = HttpMethod.Get,
+            Response = @"{""name"":""response 1""}",
+            StatusCode = HttpStatusCode.OK,
+            Headers = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("Accept", "application/json")
+            }
+        };
+
+        var setups = new List<MockClientDetail> { setup };
+
+        Assert.Throws<ArgumentException>(() => MockHttpClient.GetMockedHttpClient(setups));
+    }
+
+    [Fact]
+    public void GetMockedHttpClient_able_to_validate_multiple_invalid_HttpMethod()
+    {
+        var setup = new MockClientDetail()
+        {
+            BaseUrl = BaseUrl,
+            Path = "/path",
+            Response = @"{""name"":""response 1""}",
+            StatusCode = HttpStatusCode.OK,
+            Headers = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("Accept", "application/json")
+            }
+        };
+
+        var setups = new List<MockClientDetail> { setup };
+
+        Assert.Throws<ArgumentException>(() => MockHttpClient.GetMockedHttpClient(setups));
 
     }
 }

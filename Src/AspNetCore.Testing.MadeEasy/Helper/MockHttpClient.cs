@@ -11,28 +11,28 @@ using System.Threading.Tasks;
 namespace AspNetCore.Testing.MadeEasy.Helper;
 
 /// <summary>
-/// Model to hold detaild of mock http client
+/// Model to hold detaild of mock http client.
 /// </summary>
 public class MockClientDetail
 {
     /// <summary>
-    /// Base address of the url
+    /// Base address of the url.
     /// </summary>
     public string BaseUrl { get; set; } = string.Empty;
     /// <summary>
-    /// Subdirectory of the url
+    /// Subdirectory of the url.
     /// </summary>
     public string Path { get; set; } = string.Empty;
     /// <summary>
-    /// Response of the mocked url, it will be overrided if <see cref="ResponseMessage"/> is passed
+    /// Response of the mocked url, it will be overrided if <see cref="ResponseMessage"/> is passed.
     /// </summary>
     public string Response { get; set; } = string.Empty;
     /// <summary>
-    /// Http method to mock
+    /// Http method to mock.
     /// </summary>
     public HttpMethod Method { get; set; }
     /// <summary>
-    /// Response status code, it will be overrided if <see cref="ResponseMessage"/> is passed
+    /// Response status code, it will be overrided if <see cref="ResponseMessage"/> is passed.
     /// </summary>
     public HttpStatusCode StatusCode { get; set; }
     /// <summary>
@@ -41,7 +41,7 @@ public class MockClientDetail
     public List<KeyValuePair<string, string>> Headers { get; set; } = new();
 
     /// <summary>
-    /// Custom <see cref="HttpResponseMessage"/>
+    /// Custom <see cref="HttpResponseMessage"/>. It will override <see cref="Response"/> and  <see cref="StatusCode"/>.
     /// </summary>
     public HttpResponseMessage ResponseMessage { get; set; } = default;
 }
@@ -69,7 +69,7 @@ public class MockHttpClient
         string response,
         HttpStatusCode responseStatusCode,
         HttpMethod httpMethod,
-        IList<KeyValuePair<string, string>> headers = default,
+        List<KeyValuePair<string, string>> headers = default,
         HttpResponseMessage responseMessage = default,
         string clientName = "")
     {
@@ -78,35 +78,29 @@ public class MockHttpClient
             throw new ArgumentException("Invalid data! BaseUrl or Path mandatory along with method type");
         }
 
-        var _handlerMock = new Mock<HttpMessageHandler>();
-        var _httpClientFactory = new Mock<IHttpClientFactory>();
-
-        var contentToReturn = new HttpResponseMessage
+        var mockClientDetail = new MockClientDetail
         {
-            Content = new StringContent(response),
-            StatusCode = responseStatusCode
+            BaseUrl = baseUrl,
+            Path = subUrl,
+            StatusCode = responseStatusCode,
+            Response = response,
+            Headers = headers,
+            Method = httpMethod,
+            ResponseMessage = responseMessage,
         };
 
-        _handlerMock.Protected()
-            .Setup<Task<HttpResponseMessage>>(
-                "SendAsync",
-                ItExpr.Is<HttpRequestMessage>(x =>
-                x.RequestUri == new Uri($"{baseUrl}{subUrl}") &&
-                (httpMethod == default || x.Method == httpMethod) &&
-                CheckHeaders(x, headers)),
-                ItExpr.IsAny<CancellationToken>())
-            .ReturnsAsync(responseMessage ?? contentToReturn)
+        var handlerMock = MockHandler(new List<MockClientDetail> { mockClientDetail });
+        var httpClientFactory = new Mock<IHttpClientFactory>();
+
+        httpClientFactory.Setup(x => x.CreateClient(clientName))
+            .Returns(new HttpClient(handlerMock.Object))
             .Verifiable();
 
-        _httpClientFactory.Setup(x => x.CreateClient(clientName))
-            .Returns(new HttpClient(_handlerMock.Object))
-            .Verifiable();
-
-        return (_httpClientFactory, _handlerMock);
+        return (httpClientFactory, handlerMock);
     }
 
     /// <summary>
-    /// Setup mock HttpClientFactory and HttpMessageHandler with multiple address and http method
+    /// Setup mock HttpClientFactory and HttpMessageHandler with multiple address and http method.
     /// </summary>
     /// <param name="mockClientDetails"></param>
     /// <param name="clientName"></param>
@@ -114,22 +108,108 @@ public class MockHttpClient
     public static (Mock<IHttpClientFactory>, Mock<HttpMessageHandler>) GetMockedNamedHttpClientFactory(
         List<MockClientDetail> mockClientDetails, string clientName = "")
     {
-        var validData = mockClientDetails.Where(
-            x => (!string.IsNullOrWhiteSpace(x.BaseUrl) || !string.IsNullOrWhiteSpace(x.Path)) &&
-            x.Method != default).ToList();
-
-        if (validData.Count != mockClientDetails.Count)
+        if (!ValidateMockClientDetails(mockClientDetails))
         {
             throw new ArgumentException("Invalid data! BaseUrl or Path mandatory along with method type");
         }
 
-        var _handlerMock = new Mock<HttpMessageHandler>();
+        var handlerMock = MockHandler(mockClientDetails);
         var _httpClientFactory = new Mock<IHttpClientFactory>();
 
+        _httpClientFactory.Setup(x => x.CreateClient(clientName))
+            .Returns(new HttpClient(handlerMock.Object))
+            .Verifiable();
+
+        return (_httpClientFactory, handlerMock);
+    }
+
+    /// <summary>
+    /// Get <see cref="HttpClient"/> and <see cref="HttpMessageHandler"/> with mocked http message handler
+    /// </summary>
+    /// <param name="mockClientDetails">details to mock the request</param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    public static (HttpClient, Mock<HttpMessageHandler>) GetMockedHttpClient(List<MockClientDetail> mockClientDetails)
+    {
+        if (!ValidateMockClientDetails(mockClientDetails))
+        {
+            throw new ArgumentException("Invalid data! BaseUrl or Path mandatory along with method type");
+        }
+
+        var handler = MockHandler(mockClientDetails);
+
+
+        return (new HttpClient(handler.Object), handler);
+
+    }
+
+    /// <summary>
+    /// Get <see cref="HttpClient"/> and <see cref="HttpMessageHandler"/> with mocked http message handler
+    /// </summary>
+    /// <param name="baseUrl">base url</param>
+    /// <param name="subUrl">sub url</param>
+    /// <param name="response">reponse body</param>
+    /// <param name="responseStatusCode">reponse http status code</param>
+    /// <param name="httpMethod">request http method</param>
+    /// <param name="headers">request headers to be verified</param>
+    /// <param name="responseMessage"><see cref="HttpResponseMessage"></see>, it will override the response and response status code that is passed</param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+
+    public static (HttpClient, Mock<HttpMessageHandler>) GetMockedHttpClient(string baseUrl,
+        string subUrl,
+        string response,
+        HttpStatusCode responseStatusCode,
+        HttpMethod httpMethod,
+        List<KeyValuePair<string, string>> headers = default,
+        HttpResponseMessage responseMessage = default)
+    {
+        var mockClientDetail = new MockClientDetail
+        {
+            BaseUrl = baseUrl,
+            Path = subUrl,
+            StatusCode = responseStatusCode,
+            Response = response,
+            Headers = headers,
+            Method = httpMethod,
+            ResponseMessage = responseMessage,
+        };
+
+        var details = new List<MockClientDetail> { mockClientDetail };
+
+        if (mockClientDetail == null || !ValidateMockClientDetails(details))
+        {
+            throw new ArgumentException("Invalid data! BaseUrl or Path and method type should not be empty");
+        }
+
+        var handler = MockHandler(details);
+
+
+        return (new HttpClient(handler.Object), handler);
+
+    }
+
+    private static bool ValidateMockClientDetails(List<MockClientDetail> mockClientDetails)
+    {
+        var validData = mockClientDetails.Where(
+         x => (!string.IsNullOrWhiteSpace(x.BaseUrl) || !string.IsNullOrWhiteSpace(x.Path)) &&
+         x.Method != default).ToList();
+
+        if (validData.Count != mockClientDetails.Count)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static Mock<HttpMessageHandler> MockHandler(List<MockClientDetail> mockClientDetails)
+    {
+        var handlerMock = new Mock<HttpMessageHandler>();
 
         foreach (var detail in mockClientDetails)
         {
-            _handlerMock.Protected()
+            handlerMock.Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(x =>
@@ -146,16 +226,11 @@ public class MockHttpClient
                  ).Verifiable();
         }
 
-        _httpClientFactory.Setup(x => x.CreateClient(clientName))
-            .Returns(new HttpClient(_handlerMock.Object))
-            .Verifiable();
-
-        return (_httpClientFactory, _handlerMock);
+        return handlerMock;
     }
 
-
-    private static readonly Func<HttpRequestMessage, IList<KeyValuePair<string, string>>, bool> CheckHeaders =
-        delegate (HttpRequestMessage httpRequest, IList<KeyValuePair<string, string>> headers) {
+    private static readonly Func<HttpRequestMessage, List<KeyValuePair<string, string>>, bool> CheckHeaders =
+        delegate (HttpRequestMessage httpRequest, List<KeyValuePair<string, string>> headers) {
 
             if (headers == null || !headers.Any())
             {
