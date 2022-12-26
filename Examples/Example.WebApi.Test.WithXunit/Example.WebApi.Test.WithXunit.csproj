@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\AspNetCore.Testing.MadeEasy\AspNetCore.Testing.MadeEasy.csproj" />
+    <ProjectReference Include="..\..\Src\AspNetCore.Testing.MadeEasy\AspNetCore.Testing.MadeEasy.csproj" />
     <ProjectReference Include="..\Example.WebApi\Example.WebApi.csproj" />
   </ItemGroup>
 
