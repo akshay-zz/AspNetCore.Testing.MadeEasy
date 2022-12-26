@@ -113,14 +113,14 @@ public class MockHttpClient
             throw new ArgumentException("Invalid data! BaseUrl or Path mandatory along with method type");
         }
 
-        var _handlerMock = MockHandler(mockClientDetails);
+        var handlerMock = MockHandler(mockClientDetails);
         var _httpClientFactory = new Mock<IHttpClientFactory>();
 
         _httpClientFactory.Setup(x => x.CreateClient(clientName))
-            .Returns(new HttpClient(_handlerMock.Object))
+            .Returns(new HttpClient(handlerMock.Object))
             .Verifiable();
 
-        return (_httpClientFactory, _handlerMock);
+        return (_httpClientFactory, handlerMock);
     }
 
     /// <summary>
