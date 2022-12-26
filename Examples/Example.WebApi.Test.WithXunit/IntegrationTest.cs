@@ -74,7 +74,7 @@ namespace Example.WebApi.Test.WithXunit
                 ctx.Database.OpenConnectionAsync().Wait();
                 ((Npgsql.NpgsqlConnection)ctx.Database.GetDbConnection()).ReloadTypes();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }

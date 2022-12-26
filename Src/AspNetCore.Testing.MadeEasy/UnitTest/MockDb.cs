@@ -36,10 +36,12 @@ public class MockDb
         // https://github.com/dotnet/efcore/issues/27110#issuecomment-1009000699 for the time being we are mocking it.
         // Latter if will find any better approach will implement that.
 
+#pragma warning disable EF1001 // Internal EF Core API usage.
         var internalEntityEntry = new InternalEntityEntry(
             new Mock<IStateManager>().Object,
             new RuntimeEntityType("T", typeof(TEntity), false, null, null, null, ChangeTrackingStrategy.Snapshot, null, false),
             data);
+#pragma warning restore EF1001 // Internal EF Core API usage.
 
         entityEntry ??= new Mock<EntityEntry<TEntity>>(internalEntityEntry).Object;
 

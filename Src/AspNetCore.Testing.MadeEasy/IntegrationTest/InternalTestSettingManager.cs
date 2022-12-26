@@ -24,7 +24,7 @@ internal class InternalTestSettingManager
     }
 
     /// <summary>
-    /// Provide access to <see cref="InternalTestSettingManager" instance/>
+    /// Provide access to <see cref="InternalTestSettingManager"/> instance.
     /// </summary>
     public static InternalTestSetting Current
     {
