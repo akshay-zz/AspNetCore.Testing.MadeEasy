@@ -26,15 +26,18 @@ jobs:
       - name: Display dotnet version
         run: dotnet --version
 
-      - name: Clean project
-        run: dotnet clean
+      - name: Display list of sdks
+        run: dotnet --list-sdks
+
+      # - name: Clean project
+      #   run: dotnet clean
       
-      - name: Install dependencies
-        run: dotnet restore
+      # - name: Install dependencies
+      #   run: dotnet restore
       
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
+      # - name: Build
+      #   run: dotnet build --configuration Release --no-restore
       
-      - name: Test
-        run: dotnet test --no-restore --verbosity normal
+      # - name: Test
+      #   run: dotnet test --no-restore --verbosity normal
       
