@@ -14,5 +14,7 @@ public class InternalTestSettingManagerTests
         Assert.Equal("Server=localhost;database=example;User Id=postgres;password=welcome;port=5432;",
             a.ConnectionString);
         Assert.Equal(3, a.DockerDb.EnviromentVariables.Count);
+        Assert.Equal(5432, a.DockerDb.HostPort);
+        Assert.Equal(5431, a.DockerDb.ContainerPort);
     }
 }

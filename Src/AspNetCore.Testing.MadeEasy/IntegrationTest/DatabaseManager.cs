@@ -29,8 +29,8 @@ public class DatabaseManager
                 .WithName(InternalTestSettingManager.Current.DockerDb.ContainerName)
                 .WithEnvironment(InternalTestSettingManager.Current.DockerDb.EnviromentVariables)
                 .WithCleanUp(true)
-                .WithPortBinding(5432, 5432)
-                .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
+                .WithPortBinding(InternalTestSettingManager.Current.DockerDb.HostPort, InternalTestSettingManager.Current.DockerDb.ContainerPort)
+                .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(InternalTestSettingManager.Current.DockerDb.ContainerPort))
                 .Build();
     }
 
@@ -56,6 +56,6 @@ public class DatabaseManager
     /// <summary>
     /// Provide connection string of the test database.
     /// </summary>
-    public static string ConnectionString 
+    public static string ConnectionString
         => InternalTestSettingManager.Current.ConnectionString;
 }
