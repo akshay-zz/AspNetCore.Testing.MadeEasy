@@ -60,6 +60,8 @@ internal class DockerSetting
 
     public string Image { get; set; }
     public string ContainerName { get; set; }
+    public int HostPort { get; set; }
+    public int ContainerPort { get; set; }
     public Dictionary<string, string> EnviromentVariables
     {
         get => enviromentVariables ?? new();
