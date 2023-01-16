@@ -75,13 +75,14 @@ Under the hood, it is using [Testcontainer](https://github.com/testcontainers/te
 
 - Configure `appsettings.Testing.json`
 ```JSON
-{
-  "AspNetCore.Testing.MadeEasy": {
+{"AspNetCore.Testing.MadeEasy": {
     "UseExternaldb": false,
     "ConnectionString": "Server=localhost;database=example;User Id=postgres;password=welcome;port=5432;",
     "DockerDb": {
       "Image": "kartoza/postgis",
       "ContainerName": "example_postgris",
+      "HostPort": 5432,
+      "ContainerPort": 5432,
       "EnviromentVariables": {
         "POSTGRES_USER": "postgres",
         "POSTGRES_PASSWORD": "welcome",
