@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace AspNetCore.Testing.MadeEasy.EfCore.Moq;
 
+/// <summary>
+/// Extension methods for <see cref="Mock{T}"/>.
+/// </summary>
 public static class MoqDbSetExtensions
 {
 
@@ -23,8 +26,8 @@ public static class MoqDbSetExtensions
     /// <param name="entityEntry"> Entity entry</param>
     /// <returns></returns>
     public static Mock<DbSet<TEntity>> CreateDbSet<TEntity>(
-        this ICollection<TEntity> data, Func<object[], TEntity>? find = default,
-        EntityEntry<TEntity>? entityEntry = default)
+        this ICollection<TEntity> data, Func<object[], TEntity> find = default,
+        EntityEntry<TEntity> entityEntry = default)
         where TEntity : class
     {
         var query = data.AsQueryable();

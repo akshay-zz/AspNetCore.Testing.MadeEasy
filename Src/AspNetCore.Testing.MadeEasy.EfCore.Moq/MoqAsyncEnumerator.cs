@@ -29,12 +29,12 @@ internal class InMemoryAsyncQueryProvider<TEntity> : IAsyncQueryProvider
 
     public object Execute(Expression expression)
     {
-        return this.innerQueryProvider.Execute(expression)!;
+        return innerQueryProvider.Execute(expression)!;
     }
 
     public TResult Execute<TResult>(Expression expression)
     {
-        return this.innerQueryProvider.Execute<TResult>(expression);
+        return innerQueryProvider.Execute<TResult>(expression);
     }
 
     public TResult ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken = new CancellationToken())
@@ -79,7 +79,7 @@ internal class InMemoryAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable
 
     public IAsyncEnumerator<T> GetEnumerator()
     {
-        return this.GetAsyncEnumerator();
+        return GetAsyncEnumerator();
     }
 }
 
@@ -90,12 +90,12 @@ internal class InMemoryDbAsyncEnumerator<T> : IAsyncEnumerator<T>
 
     public InMemoryDbAsyncEnumerator(IEnumerator<T> enumerator)
     {
-        this.innerEnumerator = enumerator;
+        innerEnumerator = enumerator;
     }
 
     public void Dispose()
     {
-        this.Dispose(true);
+        Dispose(true);
         GC.SuppressFinalize(this);
     }
 
@@ -107,27 +107,27 @@ internal class InMemoryDbAsyncEnumerator<T> : IAsyncEnumerator<T>
 
     public Task<bool> MoveNext(CancellationToken cancellationToken)
     {
-        return Task.FromResult(this.innerEnumerator.MoveNext());
+        return Task.FromResult(innerEnumerator.MoveNext());
     }
 
     public ValueTask<bool> MoveNextAsync()
     {
-        return new ValueTask<bool>(Task.FromResult(this.innerEnumerator.MoveNext()));
+        return new ValueTask<bool>(Task.FromResult(innerEnumerator.MoveNext()));
     }
 
-    public T Current => this.innerEnumerator.Current;
+    public T Current => innerEnumerator.Current;
 
     protected virtual void Dispose(bool disposing)
     {
-        if (!this.disposed)
+        if (!disposed)
         {
             if (disposing)
             {
                 // Dispose managed resources.
-                this.innerEnumerator.Dispose();
+                innerEnumerator.Dispose();
             }
 
-            this.disposed = true;
+            disposed = true;
         }
     }
 }
