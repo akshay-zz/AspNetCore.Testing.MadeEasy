@@ -1,5 +1,5 @@
-﻿using AspNetCore.Testing.MadeEasy.Extensions;
-using AspNetCore.Testing.MadeEasy.UnitTest;
+﻿using AspNetCore.Testing.MadeEasy.EfCore.Moq;
+using AspNetCore.Testing.MadeEasy.Extensions;
 
 namespace AspNetCore.Testing.MadeEasy.Test.Extensions;
 
@@ -11,7 +11,7 @@ public class DatabaseRelatedExtensionsTests
         var blog = new Blog();
         var blog2 = new Blog();
         var data = new List<Blog> { blog, blog2, new Blog() };
-        var set = MockDb.CreateDbSet<Blog>(data);
+        var set = data.CreateDbSet<Blog>();
 
         set.Object.Clear();
 

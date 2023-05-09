@@ -9,13 +9,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AspNetCore.Testing.MadeEasy.UnitTest;
+namespace AspNetCore.Testing.MadeEasy.EfCore.Moq;
 
 /// <summary>
-/// Create mock db set
+/// Extension methods for <see cref="Mock{T}"/>.
 /// </summary>
-public class MockDb
+public static class MoqDbSetExtensions
 {
+
     /// <summary>
     /// Generate <see cref="Mock"/> of <see cref="DbSet{TEntity}"/>
     /// </summary>
@@ -25,7 +26,7 @@ public class MockDb
     /// <param name="entityEntry"> Entity entry</param>
     /// <returns></returns>
     public static Mock<DbSet<TEntity>> CreateDbSet<TEntity>(
-        ICollection<TEntity> data, Func<object[], TEntity> find = default,
+        this ICollection<TEntity> data, Func<object[], TEntity> find = default,
         EntityEntry<TEntity> entityEntry = default)
         where TEntity : class
     {
@@ -60,13 +61,14 @@ public class MockDb
         mockSet.As<IQueryable<TEntity>>().Setup(m => m.ElementType).Returns(query.ElementType);
         mockSet.As<IQueryable<TEntity>>().Setup(m => m.GetEnumerator()).Returns(() => query.GetEnumerator());
 
+        //Find
         mockSet.Setup(m => m.Find(It.IsAny<object[]>())).Returns(find);
 
         mockSet.Setup(m => m.FindAsync(It.IsAny<object[]>()))
-            .Returns<object[]>(objs => new ValueTask<TEntity>(find(objs)));
+            .Returns<object[]>(objs => new ValueTask<TEntity?>(find(objs)));
 
         mockSet.Setup(m => m.FindAsync(It.IsAny<object[]>(), It.IsAny<CancellationToken>()))
-            .Returns<object[], CancellationToken>((objs, tocken) => new ValueTask<TEntity>(find(objs)));
+            .Returns<object[], CancellationToken>((objs, tocken) => new ValueTask<TEntity?>(find(objs)));
 
         // Add
         mockSet.Setup(m => m.Add(It.IsAny<TEntity>()))

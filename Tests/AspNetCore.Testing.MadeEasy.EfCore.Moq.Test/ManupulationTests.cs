@@ -1,14 +1,15 @@
-﻿using AspNetCore.Testing.MadeEasy.UnitTest;
+using AspNetCore.Testing.MadeEasy.EfCore.Test;
 using Microsoft.EntityFrameworkCore;
 
-namespace AspNetCore.Testing.MadeEasy.Test.UnitTest;
+namespace AspNetCore.Testing.MadeEasy.EfCore.Moq.Test;
+
 
 public class ManupulationTests
 {
     [Fact]
     public void Can_specify_asNoTracking()
     {
-        var set = MockDb.CreateDbSet(new List<Blog> { new Blog() });
+        var set = (new List<Blog> { new Blog() }).CreateDbSet();
 
         var result = set.Object
             .AsNoTracking()
@@ -27,8 +28,7 @@ public class ManupulationTests
                 new Blog { BlogId = 3 }
             };
 
-        var set = MockDb.CreateDbSet(data,
-            objs => data.FirstOrDefault(b => b.BlogId == (int)objs.First()));
+        var set = data.CreateDbSet(objs => data.FirstOrDefault(b => b.BlogId == (int)objs.First()));
 
         var result = set.Object
             .Find(1);
@@ -47,8 +47,7 @@ public class ManupulationTests
                 new Blog { BlogId = 3 }
             };
 
-        var set = MockDb.CreateDbSet(data,
-            objs => data.FirstOrDefault(b => b.BlogId == (int)objs.First()));
+        var set = data.CreateDbSet(objs => data.FirstOrDefault(b => b.BlogId == (int)objs.First()));
 
         var result = await set.Object
             .FindAsync(1);
@@ -67,8 +66,7 @@ public class ManupulationTests
                 new Blog { BlogId = 3 }
             };
 
-        var set = MockDb.CreateDbSet(data,
-            objs => data.FirstOrDefault(b => b.BlogId == (int)objs.First()));
+        var set = data.CreateDbSet(objs => data.FirstOrDefault(b => b.BlogId == (int)objs.First()));
 
         var result = await set.Object
             .FindAsync(1, CancellationToken.None);
@@ -83,7 +81,7 @@ public class ManupulationTests
         var blog = new Blog();
         var data = new List<Blog> { };
 
-        var set = MockDb.CreateDbSet(data);
+        var set = data.CreateDbSet();
 
         set.Object.Add(blog);
 
@@ -98,7 +96,7 @@ public class ManupulationTests
         var blog = new Blog();
         var data = new List<Blog> { };
 
-        var set = MockDb.CreateDbSet(data);
+        var set = data.CreateDbSet();
 
         set.Object.Add(blog);
         set.Object.Add(blog);
@@ -114,7 +112,7 @@ public class ManupulationTests
         var blog = new Blog();
         var data = new List<Blog> { };
 
-        var set = MockDb.CreateDbSet(data);
+        var set = data.CreateDbSet();
 
         await set.Object.AddAsync(blog);
 
@@ -129,7 +127,7 @@ public class ManupulationTests
         var blog = new Blog();
         var data = new List<Blog> { };
 
-        var set = MockDb.CreateDbSet(data);
+        var set = data.CreateDbSet();
 
         set.Object.Attach(blog);
 
@@ -144,7 +142,7 @@ public class ManupulationTests
         var blog = new Blog();
         var data = new List<Blog> { blog };
 
-        var set = MockDb.CreateDbSet(data);
+        var set = data.CreateDbSet();
 
         set.Object.Remove(blog);
 
@@ -158,7 +156,7 @@ public class ManupulationTests
     {
         var data = new List<Blog> { new Blog(), new Blog() };
 
-        var set = MockDb.CreateDbSet(new List<Blog> { new Blog() });
+        var set = new List<Blog> { new Blog() }.CreateDbSet();
 
         set.Object.AddRange(data);
 
@@ -170,7 +168,7 @@ public class ManupulationTests
     [Fact]
     public async Task Can_addRange_sets_async_with_params()
     {
-        var set = MockDb.CreateDbSet(new List<Blog> { new Blog() });
+        var set = new List<Blog> { new Blog() }.CreateDbSet();
 
         await set.Object.AddRangeAsync(new Blog(), new Blog());
 
@@ -182,7 +180,7 @@ public class ManupulationTests
     [Fact]
     public void Can_attach_range_sets_async_with_params()
     {
-        var set = MockDb.CreateDbSet(new List<Blog> { new Blog() });
+        var set = new List<Blog> { new Blog() }.CreateDbSet();
 
         set.Object.AttachRange(new Blog(), new Blog());
 
@@ -199,7 +197,7 @@ public class ManupulationTests
         var range = new List<Blog> { blog, blog2 };
         var data = new List<Blog> { blog, blog2, new Blog() };
 
-        var set = MockDb.CreateDbSet(data);
+        var set = data.CreateDbSet();
 
         set.Object.RemoveRange(blog, blog2);
 
@@ -211,7 +209,7 @@ public class ManupulationTests
     [Fact]
     public void Can_addRange_sets_with_params()
     {
-        var set = MockDb.CreateDbSet(new List<Blog> { new Blog() });
+        var set = new List<Blog> { new Blog() }.CreateDbSet();
 
         set.Object.AddRange(new Blog(), new Blog());
 
@@ -223,7 +221,7 @@ public class ManupulationTests
     [Fact]
     public async Task Can_addRange_sets_async()
     {
-        var set = MockDb.CreateDbSet(new List<Blog> { new Blog() });
+        var set = new List<Blog> { new Blog() }.CreateDbSet();
 
         await set.Object.AddRangeAsync(new List<Blog> { new Blog(), new Blog() });
 
@@ -235,7 +233,7 @@ public class ManupulationTests
     [Fact]
     public void Can_attachRange_sets()
     {
-        var set = MockDb.CreateDbSet(new List<Blog> { new Blog() });
+        var set = new List<Blog> { new Blog() }.CreateDbSet();
 
         set.Object.AttachRange(new List<Blog> { new Blog(), new Blog() });
 
@@ -252,7 +250,7 @@ public class ManupulationTests
         var range = new List<Blog> { blog, blog2 };
         var data = new List<Blog> { blog, blog2, new Blog() };
 
-        var set = MockDb.CreateDbSet(data);
+        var set = data.CreateDbSet();
 
         set.Object.RemoveRange(range);
 
@@ -264,7 +262,7 @@ public class ManupulationTests
     [Fact]
     public void Can_toList_twice()
     {
-        var set = MockDb.CreateDbSet(new List<Blog> { new Blog() });
+        var set = new List<Blog> { new Blog() }.CreateDbSet();
 
         _ = set.Object.ToList();
 

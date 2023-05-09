@@ -51,4 +51,8 @@ It also comes with some helpful extensions and mock functionality to easy the te
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AspNetCore.Testing.MadeEasy.EfCore.Moq\AspNetCore.Testing.MadeEasy.EfCore.Moq.csproj" />
+  </ItemGroup>
+
 </Project>

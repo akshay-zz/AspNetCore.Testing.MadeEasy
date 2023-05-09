@@ -1,4 +1,5 @@
-﻿using AspNetCore.Testing.MadeEasy.UnitTest;
+﻿using AspNetCore.Testing.MadeEasy.EfCore.Moq;
+using AspNetCore.Testing.MadeEasy.EfCore.Test;
 using Microsoft.EntityFrameworkCore;
 
 namespace AspNetCore.Testing.MadeEasy.Test.UnitTest;
@@ -10,7 +11,7 @@ public class QueryTests
     {
         var data = new List<Blog> { new Blog { }, new Blog { } };
 
-        var set = MockDb.CreateDbSet(data);
+        var set = data.CreateDbSet();
 
         var count = 0;
         foreach (var item in set.Object)
@@ -26,7 +27,7 @@ public class QueryTests
     {
         var data = new List<Blog> { new Blog(), new Blog() };
 
-        var set = MockDb.CreateDbSet(data);
+        var set = data.CreateDbSet();
 
         var count = 0;
         await set.Object.ForEachAsync(b => count++);
@@ -39,7 +40,7 @@ public class QueryTests
     {
         var data = new List<Blog> { new Blog(), new Blog() };
 
-        var set = MockDb.CreateDbSet(data);
+        var set = data.CreateDbSet();
 
         var result = set.Object.ToList();
 
@@ -51,7 +52,7 @@ public class QueryTests
     {
         var data = new List<Blog> { new Blog(), new Blog() };
 
-        var set = MockDb.CreateDbSet(data);
+        var set = data.CreateDbSet();
 
         var result = await set.Object.ToListAsync();
 
@@ -68,7 +69,7 @@ public class QueryTests
                 new Blog { BlogId = 3}
             };
 
-        var set = MockDb.CreateDbSet(data);
+        var set = data.CreateDbSet();
 
         var result = set.Object
             .Where(b => b.BlogId > 1)
@@ -90,7 +91,7 @@ public class QueryTests
                 new Blog { BlogId = 3}
             };
 
-        var set = MockDb.CreateDbSet(data);
+        var set = data.CreateDbSet();
 
         var result = await set.Object
             .Where(b => b.BlogId > 1)
@@ -107,7 +108,7 @@ public class QueryTests
     {
         var data = new List<Blog> { new Blog(), new Blog() };
 
-        var set = MockDb.CreateDbSet(data);
+        var set = data.CreateDbSet();
 
         var result = set.Object
             .Include(b => b.Posts)
@@ -121,7 +122,7 @@ public class QueryTests
     {
         var data = new List<Blog> { new Blog(), new Blog() };
 
-        var set = MockDb.CreateDbSet(data);
+        var set = data.CreateDbSet();
 
         var result = set.Object
             .OrderBy(b => b.BlogId)

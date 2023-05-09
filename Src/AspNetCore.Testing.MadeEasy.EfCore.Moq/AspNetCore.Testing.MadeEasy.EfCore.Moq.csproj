@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Authors>Akshay Kumar</Authors>
+    <RepositoryUrl>https://github.com/akshay-zz/AspNetCore.Testing.MadeEasy</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <VersionPrefix>6.0.0</VersionPrefix>
+    <VersionSuffix></VersionSuffix>
+    <PackageReleaseNotes>
+      6.0.0 Add support to mock ef core.
+    </PackageReleaseNotes>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>testing;moq;integration;test;unittest;entity;ef;AspNetCore;MadeEasy;</PackageTags>
+    <PackageProjectUrl>https://github.com/akshay-zz/AspNetCore.Testing.MadeEasy</PackageProjectUrl>
+    <Description>
+      AspNetCore.Testing.MadeEasy.EfCore.Moq provides as implementation of DbAsyncQueryProvider.
+    </Description>
+    <PackageIcon>logo.png</PackageIcon>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.11" />
+    <PackageReference Include="Moq" Version="4.18.3" />
+  </ItemGroup>
+
+</Project>
