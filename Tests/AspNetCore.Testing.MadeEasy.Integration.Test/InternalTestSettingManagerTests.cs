@@ -1,6 +1,4 @@
-﻿using AspNetCore.Testing.MadeEasy.IntegrationTest;
-
-namespace AspNetCore.Testing.MadeEasy.Test.IntegrationTest;
+﻿namespace AspNetCore.Testing.MadeEasy.Integration.Test;
 
 public class InternalTestSettingManagerTests
 {

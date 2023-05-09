@@ -7,7 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace AspNetCore.Testing.MadeEasy.IntegrationTest;
+namespace AspNetCore.Testing.MadeEasy.Integration;
 
 /// <summary>
 /// Inherit to your test class to get access of db context and test http client. 
