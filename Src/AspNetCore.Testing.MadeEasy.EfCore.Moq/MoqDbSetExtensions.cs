@@ -3,6 +3,11 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AspNetCore.Testing.MadeEasy.EfCore.Moq;
 
@@ -52,12 +57,6 @@ public static class MoqDbSetExtensions
         mockSet.As<IQueryable<TEntity>>().Setup(m => m.Expression).Returns(query.Expression);
         mockSet.As<IQueryable<TEntity>>().Setup(m => m.ElementType).Returns(query.ElementType);
         mockSet.As<IQueryable<TEntity>>().Setup(m => m.GetEnumerator()).Returns(() => query.GetEnumerator());
-
-        // As no tracking
-        mockSet.Setup(m => m.AsNoTracking()).Returns(mockSet.Object);
-
-        // Include
-        mockSet.Setup(m => m.Include(It.IsAny<string>())).Returns(mockSet.Object);
 
         //Find
         mockSet.Setup(m => m.Find(It.IsAny<object[]>())).Returns(find);
