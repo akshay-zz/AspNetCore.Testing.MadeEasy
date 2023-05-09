@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace AspNetCore.Testing.MadeEasy.IntegrationTest;
+namespace AspNetCore.Testing.MadeEasy.Integration;
 
 /// <summary>
 /// Manages settings for the testing. It's a singleton class. To use it access it through <see cref="Current"/>

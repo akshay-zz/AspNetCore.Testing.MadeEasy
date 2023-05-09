@@ -2,7 +2,7 @@
 using DotNet.Testcontainers.Containers;
 using System.Threading.Tasks;
 
-namespace AspNetCore.Testing.MadeEasy.IntegrationTest;
+namespace AspNetCore.Testing.MadeEasy.Integration;
 
 /// <summary>
 /// Database manager

@@ -1,4 +1,4 @@
-﻿using AspNetCore.Testing.MadeEasy.IntegrationTest;
+﻿using AspNetCore.Testing.MadeEasy.Integration;
 
 namespace AspNetCore.Testing.MadeEasy.Test.IntegrationTest;
 
