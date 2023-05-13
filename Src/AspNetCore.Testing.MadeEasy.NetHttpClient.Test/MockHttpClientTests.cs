@@ -1,7 +1,6 @@
-﻿using AspNetCore.Testing.MadeEasy.Helper;
 using System.Net;
 
-namespace AspNetCore.Testing.MadeEasy.Test.Helper;
+namespace AspNetCore.Testing.MadeEasy.NetHttpClient.Test;
 
 public class MockHttpClientTests
 {

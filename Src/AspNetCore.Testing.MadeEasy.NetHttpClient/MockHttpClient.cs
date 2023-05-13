@@ -8,7 +8,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AspNetCore.Testing.MadeEasy.Helper;
+namespace AspNetCore.Testing.MadeEasy.NetHttpClient;
+
 
 /// <summary>
 /// Model to hold detaild of mock http client.
@@ -30,7 +31,7 @@ public class MockClientDetail
     /// <summary>
     /// Http method to mock.
     /// </summary>
-    public HttpMethod Method { get; set; }
+    public HttpMethod? Method { get; set; }
     /// <summary>
     /// Response status code, it will be overrided if <see cref="ResponseMessage"/> is passed.
     /// </summary>
@@ -43,7 +44,7 @@ public class MockClientDetail
     /// <summary>
     /// Custom <see cref="HttpResponseMessage"/>. It will override <see cref="Response"/> and  <see cref="StatusCode"/>.
     /// </summary>
-    public HttpResponseMessage ResponseMessage { get; set; } = default;
+    public HttpResponseMessage? ResponseMessage { get; set; } = default;
 }
 
 /// <summary>
@@ -68,9 +69,9 @@ public class MockHttpClient
         string subUrl,
         string response,
         HttpStatusCode responseStatusCode,
-        HttpMethod httpMethod,
-        List<KeyValuePair<string, string>> headers = default,
-        HttpResponseMessage responseMessage = default,
+        HttpMethod? httpMethod,
+        List<KeyValuePair<string, string>>? headers = default,
+        HttpResponseMessage? responseMessage = default,
         string clientName = "")
     {
         if ((string.IsNullOrWhiteSpace(baseUrl) && string.IsNullOrWhiteSpace(subUrl)) || httpMethod == default)
@@ -84,7 +85,7 @@ public class MockHttpClient
             Path = subUrl,
             StatusCode = responseStatusCode,
             Response = response,
-            Headers = headers,
+            Headers = headers ?? new List<KeyValuePair<string, string>>(),
             Method = httpMethod,
             ResponseMessage = responseMessage,
         };
@@ -161,8 +162,8 @@ public class MockHttpClient
         string response,
         HttpStatusCode responseStatusCode,
         HttpMethod httpMethod,
-        List<KeyValuePair<string, string>> headers = default,
-        HttpResponseMessage responseMessage = default)
+        List<KeyValuePair<string, string>>? headers = default,
+        HttpResponseMessage? responseMessage = default)
     {
         var mockClientDetail = new MockClientDetail
         {
@@ -170,7 +171,7 @@ public class MockHttpClient
             Path = subUrl,
             StatusCode = responseStatusCode,
             Response = response,
-            Headers = headers,
+            Headers = headers ?? new List<KeyValuePair<string, string>>(),
             Method = httpMethod,
             ResponseMessage = responseMessage,
         };
