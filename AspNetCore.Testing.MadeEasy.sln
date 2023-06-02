@@ -30,9 +30,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Testing.MadeEasy
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Testing.MadeEasy.EfCore.Moq", "Src\AspNetCore.Testing.MadeEasy.EfCore.Moq\AspNetCore.Testing.MadeEasy.EfCore.Moq.csproj", "{8DAA8332-6C6C-42F4-B938-F13E80BA5BA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.Testing.MadeEasy.NetHttpClient", "Src\AspNetCore.Testing.MadeEasy.NetHttpClient\AspNetCore.Testing.MadeEasy.NetHttpClient.csproj", "{CF33FC86-D6CE-4576-AD91-D9579A03D29D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Testing.MadeEasy.NetHttpClient", "Src\AspNetCore.Testing.MadeEasy.NetHttpClient\AspNetCore.Testing.MadeEasy.NetHttpClient.csproj", "{CF33FC86-D6CE-4576-AD91-D9579A03D29D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.Testing.MadeEasy.NetHttpClient.Test", "Src\AspNetCore.Testing.MadeEasy.NetHttpClient.Test\AspNetCore.Testing.MadeEasy.NetHttpClient.Test.csproj", "{3E1C10EE-CEA4-4BC4-AD5B-8CC9EA4A6189}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Testing.MadeEasy.NetHttpClient.Test", "Tests\AspNetCore.Testing.MadeEasy.NetHttpClient.Test\AspNetCore.Testing.MadeEasy.NetHttpClient.Test.csproj", "{D6DAE18E-6C42-4284-89AD-171C70CD2088}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -76,10 +76,10 @@ Global
 		{CF33FC86-D6CE-4576-AD91-D9579A03D29D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF33FC86-D6CE-4576-AD91-D9579A03D29D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF33FC86-D6CE-4576-AD91-D9579A03D29D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3E1C10EE-CEA4-4BC4-AD5B-8CC9EA4A6189}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3E1C10EE-CEA4-4BC4-AD5B-8CC9EA4A6189}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3E1C10EE-CEA4-4BC4-AD5B-8CC9EA4A6189}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3E1C10EE-CEA4-4BC4-AD5B-8CC9EA4A6189}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6DAE18E-6C42-4284-89AD-171C70CD2088}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6DAE18E-6C42-4284-89AD-171C70CD2088}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6DAE18E-6C42-4284-89AD-171C70CD2088}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6DAE18E-6C42-4284-89AD-171C70CD2088}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,7 +94,7 @@ Global
 		{74C6FF31-E151-4D59-935A-0E54BDCF2DD9} = {5ED6A441-6CCC-4196-8518-AC408223ED13}
 		{8DAA8332-6C6C-42F4-B938-F13E80BA5BA7} = {A56D3E55-2494-4BC1-B1EC-ACE06B6F7C81}
 		{CF33FC86-D6CE-4576-AD91-D9579A03D29D} = {A56D3E55-2494-4BC1-B1EC-ACE06B6F7C81}
-		{3E1C10EE-CEA4-4BC4-AD5B-8CC9EA4A6189} = {5ED6A441-6CCC-4196-8518-AC408223ED13}
+		{D6DAE18E-6C42-4284-89AD-171C70CD2088} = {5ED6A441-6CCC-4196-8518-AC408223ED13}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {12F4E564-8034-4BA0-A6E4-302E3F50B5BE}
