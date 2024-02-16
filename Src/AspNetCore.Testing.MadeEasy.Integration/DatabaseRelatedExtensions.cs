@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace AspNetCore.Testing.MadeEasy.Extensions;
+namespace AspNetCore.Testing.MadeEasy.Integration;
 
 /// <summary>
 /// Extensions related to database operations

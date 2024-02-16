@@ -1,7 +1,7 @@
 ﻿using AspNetCore.Testing.MadeEasy.EfCore.Moq;
-using AspNetCore.Testing.MadeEasy.Extensions;
+using AspNetCore.Testing.MadeEasy.Test;
 
-namespace AspNetCore.Testing.MadeEasy.Test.Extensions;
+namespace AspNetCore.Testing.MadeEasy.Integration.Test;
 
 public class DatabaseRelatedExtensionsTests
 {

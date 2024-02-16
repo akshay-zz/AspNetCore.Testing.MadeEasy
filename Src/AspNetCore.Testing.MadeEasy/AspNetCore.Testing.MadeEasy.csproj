@@ -7,9 +7,10 @@
     <RepositoryUrl>https://github.com/akshay-zz/AspNetCore.Testing.MadeEasy</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <VersionPrefix>6.1.0</VersionPrefix>
+    <VersionPrefix>6.2.0</VersionPrefix>
     <VersionSuffix></VersionSuffix>
     <PackageReleaseNotes>
+      6.2.0 Trim down package
       6.1.0 Support to mock HttpClient, Support to mock multiple APIs calls in HTTP client factory, Support for custom ports for running docker db.
       6.0.0 Add utitlity to mock dbset and run integration test cases.
     </PackageReleaseNotes>
@@ -43,12 +44,6 @@ It also comes with some helpful extensions and mock functionality to easy the te
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\AspNetCore.Testing.MadeEasy.EfCore.Moq\AspNetCore.Testing.MadeEasy.EfCore.Moq.csproj" />
-    <ProjectReference Include="..\AspNetCore.Testing.MadeEasy.Integration\AspNetCore.Testing.MadeEasy.Integration.csproj" />
-    <ProjectReference Include="..\AspNetCore.Testing.MadeEasy.NetHttpClient\AspNetCore.Testing.MadeEasy.NetHttpClient.csproj" />
   </ItemGroup>
 
 </Project>

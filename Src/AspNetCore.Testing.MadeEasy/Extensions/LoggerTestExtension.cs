@@ -27,7 +27,7 @@ public static class LoggerTestExtension
         Func<object, Type, bool> state = (v, t) =>
         {
             return exactMessage
-            ? v.ToString()!.CompareTo(expectedMessage) == 0
+            ? string.Compare(v.ToString()!, expectedMessage, StringComparison.Ordinal) == 0
             : v.ToString()!.Contains(expectedMessage);
         };
 
