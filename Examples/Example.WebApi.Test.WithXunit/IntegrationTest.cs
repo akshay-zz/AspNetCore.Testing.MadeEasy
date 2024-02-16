@@ -1,5 +1,4 @@
-﻿using AspNetCore.Testing.MadeEasy.Extensions;
-using AspNetCore.Testing.MadeEasy.Integration;
+﻿using AspNetCore.Testing.MadeEasy.Integration;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;

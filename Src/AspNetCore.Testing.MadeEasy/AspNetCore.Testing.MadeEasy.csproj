@@ -45,10 +45,4 @@ It also comes with some helpful extensions and mock functionality to easy the te
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\AspNetCore.Testing.MadeEasy.EfCore.Moq\AspNetCore.Testing.MadeEasy.EfCore.Moq.csproj" />
-    <ProjectReference Include="..\AspNetCore.Testing.MadeEasy.Integration\AspNetCore.Testing.MadeEasy.Integration.csproj" />
-    <ProjectReference Include="..\AspNetCore.Testing.MadeEasy.NetHttpClient\AspNetCore.Testing.MadeEasy.NetHttpClient.csproj" />
-  </ItemGroup>
-
 </Project>
