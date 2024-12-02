@@ -1,4 +1,4 @@
-# AspNetCore.Testing.MadeEasy [![NuGet Version](https://img.shields.io/nuget/v/AspNetCore.Testing.MadeEasy.svg?plastic=flat)](https://www.nuget.org/packages/AspNetCore.Testing.MadeEasy/6.3.0)
+# AspNetCore.Testing.MadeEasy [![NuGet Version](https://img.shields.io/nuget/v/AspNetCore.Testing.MadeEasy.svg?plastic=flat)](https://www.nuget.org/packages/AspNetCore.Testing.MadeEasy)
 
 **AspNetCore.Testing.MadeEasy** provides as implementation of `DbAsyncQueryProvider` that can be used when testing a component that uses async queries with EntityFrameworkCore. Also it's provides utility to run database through docker for testing and dispose them automatically once container is being stopped.
 
